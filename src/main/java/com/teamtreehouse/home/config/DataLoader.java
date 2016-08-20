@@ -8,11 +8,11 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DataConfig implements ApplicationRunner {
+public class DataLoader implements ApplicationRunner {
     private final RoomDao roomDao;
 
     @Autowired
-    public DataConfig(RoomDao roomDao) {
+    public DataLoader(RoomDao roomDao) {
         this.roomDao = roomDao;
     }
 
