@@ -10,10 +10,6 @@ buildscript {
     }
 }
 
-configurations {
-    dev
-}
-
 apply plugin: 'java'
 apply plugin: 'spring-boot'
 
@@ -24,27 +20,15 @@ repositories {
 }
 
 dependencies {
-    // automatic restart try
-    dev("org.springframework.boot:spring-boot-devtools")
     // spring data rest
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     // spring jpa
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     // spring hal
     compile 'org.springframework.data:spring-data-rest-hal-browser'
-    // spring orm
-    compile 'org.springframework:spring-orm:4.2.5.RELEASE'
     // h2 database
     compile 'com.h2database:h2:1.4.192'
-    // hibernate
-    compile 'org.hibernate:hibernate-core:5.1.0.Final'
-    // tomcat dbcp
-    compile 'org.apache.tomcat:tomcat-dbcp:8.0.32'
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-// automatic restart when files change
-bootRun {
-    classpath = sourceSets.main.runtimeClasspath + configurations.dev
-}
