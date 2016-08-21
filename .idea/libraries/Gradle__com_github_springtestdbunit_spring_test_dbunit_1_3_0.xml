@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.springtestdbunit:spring-test-dbunit:1.3.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.springtestdbunit/spring-test-dbunit/1.3.0/596cab1e9016443d9ea9ffbc0692f4106f54c37d/spring-test-dbunit-1.3.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.springtestdbunit/spring-test-dbunit/1.3.0/77bbf218037fdc57efea42494174ba2488370576/spring-test-dbunit-1.3.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
