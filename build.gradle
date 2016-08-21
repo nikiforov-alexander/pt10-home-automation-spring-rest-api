@@ -23,6 +23,8 @@ dependencies {
 
     // spring-boot-starter for web. should be rest here ?
     compile 'org.springframework.boot:spring-boot-starter-web'
+    // hateoas
+    compile("org.springframework.boot:spring-boot-starter-hateoas")
     // spring orm
     compile 'org.springframework:spring-orm:4.2.4.RELEASE'
     // spring data jpa, to use Spring Data CRUD repositories
