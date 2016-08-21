@@ -20,15 +20,50 @@ repositories {
 }
 
 dependencies {
-    // spring data rest
-    compile 'org.springframework.boot:spring-boot-starter-data-rest'
-    // spring jpa
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    // spring hal
-    compile 'org.springframework.data:spring-data-rest-hal-browser'
-    // h2 database
-    compile 'com.h2database:h2:1.4.192'
 
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    // spring-boot-starter for web. should be rest here ?
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    // spring orm
+    compile 'org.springframework:spring-orm:4.2.4.RELEASE'
+    // spring data jpa, to use Spring Data CRUD repositories
+    compile 'org.springframework.data:spring-data-jpa:1.9.2.RELEASE'
+    // hibernate
+    compile 'org.hibernate:hibernate-core:5.0.6.Final'
+    // hibernate entity manager because we want to use Spring
+    // data JPA repositories
+    compile 'org.hibernate:hibernate-entitymanager:5.0.6.Final'
+    // tomcat dbcp
+    compile 'org.apache.tomcat:tomcat-dbcp:8.0.30'
+    // transaction : should work without it
+    compile 'javax.transaction:jta:1.1'
+
+
+    // h2 database
+    runtime 'com.h2database:h2'
+    // transaction
+    runtime 'javax.transaction:jta:1.1'
+    // will remove later
+    runtime 'org.aspectj:aspectjweaver:1.8.7'
+    // will remove later
+    runtime 'org.apache.httpcomponents:httpclient:4.5.2'
+
+    // spring-boot-starter for test
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    // spring db unit test
+    testCompile 'com.github.springtestdbunit:spring-test-dbunit:1.3.0'
+    // dbunit
+    testCompile 'org.dbunit:dbunit:2.5.2'
+    // junit
+    testCompile 'junit:junit:4.12'
+    // is subject to be removed
+    testCompile 'org.apache.httpcomponents:httpclient:4.5.2'
+
+    // stuff used by Craig
+    // spring data rest
+//    compile 'org.springframework.boot:spring-boot-starter-data-rest'
+    // spring jpa
+//    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // spring hal
+//    compile 'org.springframework.data:spring-data-rest-hal-browser'
 }
 
