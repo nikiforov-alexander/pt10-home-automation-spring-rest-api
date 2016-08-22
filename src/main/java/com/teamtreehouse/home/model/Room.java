@@ -10,7 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class Room {
+public class Room extends ResourceSupport{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -54,7 +54,7 @@ public class Room {
         this.squareFootage = squareFootage;
     }
 
-    public Long getId() {
+    public Long getPrimaryKey() {
         return id;
     }
 

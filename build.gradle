@@ -69,5 +69,13 @@ dependencies {
 //    compile 'org.springframework.data:spring-data-rest-hal-browser'
      // to convert Iterable to List
      compile 'com.google.guava:guava:19.0'
+
+    // to resolve
+    // java.lang.NoClassDefFoundError: com/jayway/jsonpath/InvalidPathException
+    // https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
+    // took from here:
+    // https://github.com/spring-guides/tut-bookmarks/blob/master/pom.xml
+    testCompile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.2.0'
+
 }
 
