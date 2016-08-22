@@ -7,6 +7,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+
 @Component
 public class DataLoader implements ApplicationRunner {
     private final RoomDao roomDao;
@@ -18,9 +19,15 @@ public class DataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        Room room = new Room();
-        room.setName("name");
-        room.setSquareFootage(123);
-        roomDao.save(room);
+        // add two rooms when app starts, database for now is drop create
+        Room room1 = new Room();
+        room1.setName("room 1");
+        room1.setSquareFootage(1);
+        roomDao.save(room1);
+
+        Room room2 = new Room();
+        room2.setName("room 2");
+        room2.setSquareFootage(2);
+        roomDao.save(room2);
     }
 }
