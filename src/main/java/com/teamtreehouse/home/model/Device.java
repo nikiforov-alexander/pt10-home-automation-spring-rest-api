@@ -74,6 +74,9 @@ public class Device {
 
     // method adding control to device
     public void addControl(Control control) {
+        // set control's device to this device
+        control.setDevice(this);
+        // add control
         controls.add(control);
     }
 }

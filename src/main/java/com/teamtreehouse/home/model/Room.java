@@ -77,6 +77,9 @@ public class Room {
 
     // add device used in DataLoader
     public void addDevice(Device device) {
+        // set device's room to this room
+        device.setRoom(this);
+        // add device
         this.devices.add(device);
     }
 }
