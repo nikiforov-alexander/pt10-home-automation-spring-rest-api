@@ -3,6 +3,7 @@ package com.teamtreehouse.home.model;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class Room {
     private String name;
 
     @Min(0)
+    @Max(value = 1000, message = "Room area has to be less than 1000 sq.m.")
     private Integer area;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
