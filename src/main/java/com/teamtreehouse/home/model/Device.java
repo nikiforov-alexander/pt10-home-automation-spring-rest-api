@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Device {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Device extends BaseEntity{
 
     @NotNull
     @NotEmpty
@@ -20,19 +17,15 @@ public class Device {
     // many controls will be in one device, and this is mapped by device
     // by foreign key in devices table
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
-    private List<Control> controls = new ArrayList<>();
+    private List<Control> controls;
 
     // many devices will be in one room
     @ManyToOne
     private Room room;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    //
+    // Getters and Setters
+    //
 
     public String getName() {
         return name;
@@ -59,9 +52,15 @@ public class Device {
     }
 
 
+    //
+    // Constructors
+    //
 
-    public Device() {
-        // default constructor for JPA
+    // default constructor for JPA
+    // calls BaseEntity constructor
+    protected Device() {
+        super();
+        controls = new ArrayList<>();
     }
 
     public Device(String name) {

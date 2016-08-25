@@ -10,11 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Room {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Room extends BaseEntity {
     @NotNull
     @NotEmpty
     private String name;
@@ -24,19 +20,11 @@ public class Room {
     private Integer area;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
-    private List<Device> devices = new ArrayList<>();
+    private List<Device> devices;
 
     //
     // Getters and Setters
     //
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -54,8 +42,11 @@ public class Room {
         this.area = area;
     }
 
-    public Room() {
-        // default constructor for JPA
+    // default constructor for JPA,
+    // calls BaseEntity constructor
+    protected Room() {
+        super();
+        devices = new ArrayList<>();
     }
 
     public Room(String name, int area, List<Device> devices) {

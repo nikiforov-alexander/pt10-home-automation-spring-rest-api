@@ -6,11 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class Control {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Control extends BaseEntity{
     @NotNull
     @NotEmpty
     private String name;
@@ -21,14 +17,9 @@ public class Control {
     @ManyToOne
     private Device device;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    //
+    // Getters and Setters
+    //
 
     public String getName() {
         return name;
@@ -46,7 +37,6 @@ public class Control {
         this.value = value;
     }
 
-
     public Device getDevice() {
         return device;
     }
@@ -55,8 +45,9 @@ public class Control {
         this.device = device;
     }
 
-
-
+    //
+    // Constructors
+    //
     public Control(String name) {
         this.name = name;
     }
@@ -66,7 +57,9 @@ public class Control {
         this.value = value;
     }
 
-    public Control() {
-        // default constructor for JPA
+    // default constructor for JPA
+    // uses BaseEntity constructor
+    protected Control() {
+        super();
     }
 }
