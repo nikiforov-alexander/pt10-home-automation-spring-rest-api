@@ -18,7 +18,7 @@ public class Device {
 
     // many controls will be in one device, and this is mapped by device
     // by foreign key in devices table
-    @OneToMany(mappedBy = "device")
+    @OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
     private List<Control> controls;
 
     // many devices will be in one room

@@ -21,7 +21,7 @@ public class Room {
     @Min(0)
     private Integer area;
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Device> devices = new ArrayList<>();
 
     //
