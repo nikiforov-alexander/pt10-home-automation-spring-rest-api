@@ -30,22 +30,20 @@ public class DataLoader implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         // create new Control
         Control control = new Control("control 1", 1);
-        // and save it to set Id
-        controlDao.save(control);
 
         // create new Device
         Device device = new Device("device 1");
         // add 1-st Control from db
-        device.addControl(controlDao.findOne(1L));
-        // save device to db
-        deviceDao.save(device);
+        device.addControl(control);
 
         // create new room
         Room room = new Room();
         room.setName("room 1");
         room.setArea(1);
+
         // add device to it: 1-st one from db
-        room.addDevice(deviceDao.findOne(1L));
+        room.addDevice(device);
+
         // save room
         roomDao.save(room);
     }
