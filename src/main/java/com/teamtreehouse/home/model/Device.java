@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ public class Device {
     // many controls will be in one device, and this is mapped by device
     // by foreign key in devices table
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
-    private List<Control> controls;
+    private List<Control> controls = new ArrayList<>();
 
     // many devices will be in one room
     @ManyToOne
