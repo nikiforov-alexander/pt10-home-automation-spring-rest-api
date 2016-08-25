@@ -5,6 +5,7 @@
       <configuration>
         <fileset id="fileset" name="Spring Application Context" removed="false">
           <file>file://$MODULE_DIR$/../../src/main/java/com/teamtreehouse/home/Application.java</file>
+          <file>file://$MODULE_DIR$/../../src/main/java/com/teamtreehouse/home/config/DataConfig.java</file>
         </fileset>
       </configuration>
     </facet>

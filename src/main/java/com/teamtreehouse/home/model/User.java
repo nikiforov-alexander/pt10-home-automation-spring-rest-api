@@ -1,4 +1,4 @@
 package com.teamtreehouse.home.model;
 
-public class Equipment {
+public class User {
 }
