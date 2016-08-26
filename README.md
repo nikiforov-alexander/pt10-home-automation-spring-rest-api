@@ -38,8 +38,10 @@
     ./src/main/resources/rest-messages.properties "File w REST messages, describing our API ./src/main/resources/rest-messages.properties"
 
 <!--Misc-->
-[model_classes_relationship_diagram.png]:
+<!--
+    [model_classes_relationship_diagram.png]:
     ./misc/model_classes_relationship_diagram.png "./misc/model_classes_relationship_diagram.png"
+ -->
 
 <!--Java Classes-->
 [CustomUserDetailsService]:
@@ -102,7 +104,8 @@ Under construction...
     based on the included diagram.
     <hr>
     Entities were built according to diagram, see 
-    UML diagram [here][model_classes_relationship_diagram.png]
+    UML diagram 
+    ![here](./misc/model_classes_relationship_diagram.png)
 <hr>
 3. <a id="task-3"></a>
     <hr>
