@@ -26,6 +26,9 @@
     Build repositories that can be paged and sorted 
     for each of the entities.
     <hr>
+* [4.] (#task-4)
+    Expose the API under /api/v1/
+    <hr>
 
 <!--Links-->
 
@@ -127,5 +130,8 @@ Under construction...
     be paged and/or sorted.
 <hr>
 4. <a id="task-4"></a>
+    Expose the API under /api/v1/
     <hr>
+    Property `spring.data.rest.basePath` is set to `/api/v1` in
+    [application.properties] file.
 <hr>
