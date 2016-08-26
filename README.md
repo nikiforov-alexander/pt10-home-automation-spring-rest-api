@@ -22,6 +22,10 @@
     Build entities and relationships between Room, Device, Control, and User 
     based on the included diagram.
     <hr>
+* [3.] (#task-3)
+    Build repositories that can be paged and sorted 
+    for each of the entities.
+    <hr>
 
 <!--Links-->
 
@@ -108,5 +112,20 @@ Under construction...
     ![here](./misc/model_classes_relationship_diagram.png)
 <hr>
 3. <a id="task-3"></a>
+    Build repositories that can be paged and sorted 
+    for each of the entities.
     <hr>
-<hr
+    All repositories except from [UserDao] 
+    are paged and sorted, i.e. *extend* 
+    `PagingAndSortingRepository` from Spring Data:
+    - [RoomDao]
+    - [DeviceDao]
+    - [ControlDao]
+
+    [UserDao] *extends* `CrudRepository` because it is
+    not REST exposed, so there is no need for it to
+    be paged and/or sorted.
+<hr>
+4. <a id="task-4"></a>
+    <hr>
+<hr>
