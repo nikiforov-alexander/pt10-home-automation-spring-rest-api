@@ -83,7 +83,7 @@ public class User extends BaseEntity {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
-        this.password = password;
+        setPassword(password);
         this.roles = roles;
     }
 }
