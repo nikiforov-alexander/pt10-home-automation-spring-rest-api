@@ -10,7 +10,8 @@ public class Control extends BaseEntity{
     @NotNull
     @NotEmpty
     private String name;
-
+    // value of control: can be temperature value or 0/1 values for
+    // switch
     private Integer value;
 
     // Many controls have one device
@@ -48,18 +49,16 @@ public class Control extends BaseEntity{
     //
     // Constructors
     //
-    public Control(String name) {
-        this.name = name;
-    }
-
-    public Control(String name, Integer value) {
-        this.name = name;
-        this.value = value;
-    }
-
     // default constructor for JPA
     // uses BaseEntity constructor
     protected Control() {
         super();
     }
+
+    public Control(String name, Integer value) {
+        this();
+        this.name = name;
+        this.value = value;
+    }
+
 }
