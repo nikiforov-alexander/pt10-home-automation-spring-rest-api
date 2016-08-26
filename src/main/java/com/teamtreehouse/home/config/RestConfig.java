@@ -7,7 +7,11 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapt
 import org.springframework.validation.Validator;
 
 @Configuration
+// added this suppress warning because in Intellijidea Ultimate
+// @Bean Validator could not be found
 @SuppressWarnings("SpringJavaAutowiringInspection")
+// we extend this REST configuration class to use our validators on
+// @Entity marked classes
 public class RestConfig extends RepositoryRestConfigurerAdapter {
     @Autowired
     private Validator validator;
@@ -15,6 +19,8 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
     @Override
     public void configureValidatingRepositoryEventListener(
             ValidatingRepositoryEventListener validatingListener) {
+        // validation occurs before creation of new resource
+        // and before update
         validatingListener.addValidator("beforeCreate", validator);
         validatingListener.addValidator("beforeSave", validator);
     }
