@@ -19,25 +19,9 @@ public class User {
     @JsonIgnore
     private String[] roles;
 
-    // default constructor for JPA
-    // and calling BaseEntity constructor
-    protected User() {
-        super();
-    }
-
-    public User(
-            String firstName,
-            String lastName,
-            String username,
-            String password,
-            String[] roles) {
-        this();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-    }
+    //
+    // Getters and Setters
+    //
 
     public String getFirstName() {
         return firstName;
@@ -77,5 +61,29 @@ public class User {
 
     public void setPassword(String password) {
         this.password = PASSWORD_ENCODER.encode(password);
+    }
+
+    //
+    // Constructors
+    //
+
+    // default constructor for JPA
+    // and calling BaseEntity constructor
+    protected User() {
+        super();
+    }
+
+    public User(
+            String firstName,
+            String lastName,
+            String username,
+            String password,
+            String[] roles) {
+        this();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
     }
 }
