@@ -64,10 +64,12 @@ public class Device extends BaseEntity{
     }
 
     public Device(String name) {
+        this();
         this.name = name;
     }
 
     public Device(String name, List<Control> controls) {
+        this();
         this.name = name;
         this.controls = controls;
     }
