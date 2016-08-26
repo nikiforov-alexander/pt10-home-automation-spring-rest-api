@@ -10,8 +10,7 @@ import javax.persistence.Entity;
 public class User extends BaseEntity {
     public static final PasswordEncoder PASSWORD_ENCODER =
             new BCryptPasswordEncoder();
-    private String firstName;
-    private String lastName;
+    private String name;
     private String username;
 
     @JsonIgnore
@@ -23,20 +22,12 @@ public class User extends BaseEntity {
     // Getters and Setters
     //
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUsername() {
@@ -74,14 +65,12 @@ public class User extends BaseEntity {
     }
 
     public User(
-            String firstName,
-            String lastName,
+            String name,
             String username,
             String password,
             String[] roles) {
         this();
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.username = username;
         setPassword(password);
         this.roles = roles;

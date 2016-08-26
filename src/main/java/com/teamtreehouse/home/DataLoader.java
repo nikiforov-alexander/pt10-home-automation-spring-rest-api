@@ -37,14 +37,12 @@ public class DataLoader implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         // create two users: admin and johnDoe
         User johnDoe = new User(
-                "John",
-                "Doe",
+                "John Doe",
                 "jd",
                 "123",
                 new String[]{"ROLE_USER"});
         User admin = new User(
-                "Admin",
-                "Admin",
+                "System Administrator",
                 "sa",
                 "sa",
                 new String[]{"ROLE_USER", "ROLE_ADMIN"});
