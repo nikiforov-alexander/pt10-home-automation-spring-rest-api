@@ -1,5 +1,6 @@
 package com.teamtreehouse.home.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -22,6 +23,10 @@ public class Room extends BaseEntity {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Device> devices;
 
+    @JsonIgnore
+    @ManyToMany
+    private List<User> administrators;
+
     //
     // Getters and Setters
     //
@@ -34,19 +39,37 @@ public class Room extends BaseEntity {
         this.name = name;
     }
 
-    public int getArea() {
+    public Integer getArea() {
         return area;
     }
 
-    public void setArea(int area) {
+    public void setArea(Integer area) {
         this.area = area;
     }
+
+    public List<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<Device> devices) {
+        this.devices = devices;
+    }
+
+    public List<User> getAdministrators() {
+        return administrators;
+    }
+
+    public void setAdministrators(List<User> administrators) {
+        this.administrators = administrators;
+    }
+
 
     // default constructor for JPA,
     // calls BaseEntity constructor
     public Room() {
         super();
         devices = new ArrayList<>();
+        administrators = new ArrayList<>();
     }
 
     public Room(String name, int area, List<Device> devices) {
@@ -60,14 +83,6 @@ public class Room extends BaseEntity {
         this();
         this.name = name;
         this.area = area;
-    }
-
-    public List<Device> getDevices() {
-        return devices;
-    }
-
-    public void setDevices(List<Device> devices) {
-        this.devices = devices;
     }
 
     // add device used in DataLoader
