@@ -1,0 +1,4 @@
+build.gradle
+application.properties
+rest-messages.properties
+model_classes_relationship_diagram.png
