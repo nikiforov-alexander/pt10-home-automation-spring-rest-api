@@ -14,6 +14,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 @ComponentScan
 public class DataLoader implements ApplicationRunner {
@@ -31,6 +34,27 @@ public class DataLoader implements ApplicationRunner {
         this.deviceDao = deviceDao;
         this.controlDao = controlDao;
         this.userDao = userDao;
+    }
+
+    /**
+     * Generates list of users with administration
+     * roles, simply by looping through all users
+     * returned from userDao.findAll() method
+     * @return List<User> with administrators roles:
+     * "ROLE_ADMIN"
+     */
+    List<User> generateListOfAdministrators() {
+        List<User> administrators = new ArrayList<>();
+        userDao.findAll().forEach(
+            user -> {
+                for (String role: user.getRoles()) {
+                    if (role.equals("ROLE_ADMIN")) {
+                        administrators.add(user);
+                    }
+                }
+            }
+        );
+        return administrators;
     }
 
     @Override
@@ -62,8 +86,12 @@ public class DataLoader implements ApplicationRunner {
 
             // create new room
             Room room = new Room();
-            room.setName("room " + 1);
+            room.setName("room " + i);
             room.setArea(i);
+            // set administrators and add them to room
+            room.setAdministrators(
+                    generateListOfAdministrators()
+            );
 
             // add device to it
             room.addDevice(device);
