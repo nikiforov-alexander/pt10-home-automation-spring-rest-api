@@ -29,6 +29,9 @@
 * [4.] (#task-4)
     Expose the API under /api/v1/
     <hr>
+* [5.] (#task-5)
+    Secure the API so that only authenticated users can view details
+    <hr>
 
 <!--Links-->
 
@@ -134,4 +137,18 @@ Under construction...
     <hr>
     Property `spring.data.rest.basePath` is set to `/api/v1` in
     [application.properties] file.
+<hr>
+5. <a id="task-5"></a>
+    Secure the API so that only authenticated users can 
+    view details.
+    <hr>
+    1. Dependency 
+    `org.springframework.boot:spring-boot-starter-security`
+    is added to [build.gradle].
+    2. [WebSecurityConfiguration] file configures security
+    for our API. `configure` method ensures that every 
+    request has to be authenticated with basic authentication.
+<hr>
+6. <a id="task-6"></a>
+    <hr>
 <hr>
