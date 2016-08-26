@@ -51,7 +51,7 @@ public class Control extends BaseEntity{
     //
     // default constructor for JPA
     // uses BaseEntity constructor
-    protected Control() {
+    public Control() {
         super();
     }
 

@@ -44,7 +44,7 @@ public class Room extends BaseEntity {
 
     // default constructor for JPA,
     // calls BaseEntity constructor
-    protected Room() {
+    public Room() {
         super();
         devices = new ArrayList<>();
     }

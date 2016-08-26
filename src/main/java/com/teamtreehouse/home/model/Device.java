@@ -58,7 +58,7 @@ public class Device extends BaseEntity{
 
     // default constructor for JPA
     // calls BaseEntity constructor
-    protected Device() {
+    public Device() {
         super();
         controls = new ArrayList<>();
     }
