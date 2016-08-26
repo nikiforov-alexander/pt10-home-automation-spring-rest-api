@@ -32,6 +32,9 @@
 * [5.] (#task-5)
     Secure the API so that only authenticated users can view details
     <hr>
+* [6.] (#task-6)
+    Ensure that the users repository is not exported
+    <hr>
 
 <!--Links-->
 
@@ -150,5 +153,8 @@ Under construction...
     request has to be authenticated with basic authentication.
 <hr>
 6. <a id="task-6"></a>
+    Ensure that the users repository is not exported
     <hr>
+    [UserDao] is marked with `@RepositoryRestResource(exported = false)`
+    and thus is not exposed to REST API.
 <hr>
