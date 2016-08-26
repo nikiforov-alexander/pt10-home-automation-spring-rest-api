@@ -17,6 +17,11 @@
 * [1.] (#task-1)
     Create a Spring Data REST project to serve the HATEOAS compliant API. 
     Use the Spring Boot Gradle plugin for your dependencies.
+    <hr>
+* [2.] (#task-2)
+    Build entities and relationships between Room, Device, Control, and User 
+    based on the included diagram.
+    <hr>
 
 <!--Links-->
 
@@ -31,6 +36,10 @@
     ./src/main/resources/application.properties "Spring Application properties file ./src/main/resources/application.properties"
 [rest-messages.properties]:
     ./src/main/resources/rest-messages.properties "File w REST messages, describing our API ./src/main/resources/rest-messages.properties"
+
+<!--Misc-->
+[model_classes_relationship_diagram.png]:
+    ./misc/model_classes_relationship_diagram.png "./misc/model_classes_relationship_diagram.png"
 
 <!--Java Classes-->
 [CustomUserDetailsService]:
@@ -88,3 +97,13 @@ Under construction...
     [Application] runs with @SpringBootApplication annotation to
     ensure proper REST api auto configuration
 <hr>
+2. <a id="task-2"></a>
+    Build entities and relationships between Room, Device, Control, and User 
+    based on the included diagram.
+    <hr>
+    Entities were built according to diagram, see 
+    UML diagram [here][model_classes_relationship_diagram.png]
+<hr>
+3. <a id="task-3"></a>
+    <hr>
+<hr
