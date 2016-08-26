@@ -50,12 +50,14 @@ public class Room extends BaseEntity {
     }
 
     public Room(String name, int area, List<Device> devices) {
+        this();
         this.name = name;
         this.area = area;
         this.devices = devices;
     }
 
     public Room(String name, int area) {
+        this();
         this.name = name;
         this.area = area;
     }
