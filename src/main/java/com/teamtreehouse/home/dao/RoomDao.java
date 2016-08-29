@@ -11,11 +11,9 @@ import org.springframework.stereotype.Repository;
 public interface RoomDao
         extends PagingAndSortingRepository<Room, Long>{
 
-    // We allow only admins and users that are defined in
-    // room's administrators to save Room
+    // We allow only admins can create Room
     @Override
     @SuppressWarnings("unchecked")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or " +
-            "#room.hasAdministrator(authentication.principal)")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     Room save(@Param("room") Room room);
 }
