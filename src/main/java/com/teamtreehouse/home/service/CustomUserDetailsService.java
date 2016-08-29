@@ -1,4 +1,4 @@
-package com.teamtreehouse.home;
+package com.teamtreehouse.home.service;
 
 import com.teamtreehouse.home.dao.UserDao;
 import com.teamtreehouse.home.model.User;

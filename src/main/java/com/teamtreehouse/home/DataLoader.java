@@ -8,18 +8,15 @@ import com.teamtreehouse.home.model.Control;
 import com.teamtreehouse.home.model.Device;
 import com.teamtreehouse.home.model.Room;
 import com.teamtreehouse.home.model.User;
+import com.teamtreehouse.home.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @ComponentScan
@@ -42,27 +39,6 @@ public class DataLoader implements ApplicationRunner {
         this.controlDao = controlDao;
         this.userDao = userDao;
         this.customUserDetailsService = customUserDetailsService;
-    }
-
-    /**
-     * Generates list of users with administration
-     * roles, simply by looping through all users
-     * returned from userDao.findAll() method
-     * @return List<User> with administrators roles:
-     * "ROLE_ADMIN"
-     */
-    List<User> generateListOfAdministrators() {
-        List<User> administrators = new ArrayList<>();
-        userDao.findAll().forEach(
-            user -> {
-                for (String role: user.getRoles()) {
-                    if (role.equals("ROLE_ADMIN")) {
-                        administrators.add(user);
-                    }
-                }
-            }
-        );
-        return administrators;
     }
 
     @Override

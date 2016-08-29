@@ -1,6 +1,6 @@
 package com.teamtreehouse.home.config;
 
-import com.teamtreehouse.home.CustomUserDetailsService;
+import com.teamtreehouse.home.service.CustomUserDetailsService;
 import com.teamtreehouse.home.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
