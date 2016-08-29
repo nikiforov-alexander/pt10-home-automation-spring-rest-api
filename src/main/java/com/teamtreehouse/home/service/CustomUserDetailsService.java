@@ -21,12 +21,21 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username + " was not found");
         }
-        return new org.springframework.security.core.userdetails
-                .User(
-                    user.getUsername(),
-                    user.getPassword(),
-                    AuthorityUtils.createAuthorityList(user.getRoles()
-                )
-        );
+        // instead of returning org.springframework.security.core.userdetails
+        // I will return my User implementing UserDetails, so that
+        // when I check whether Room.hasAdministrator(Principal principal)
+        // using SpEl in RoomDao.save method:
+        // ...#room.hasAdministrator(authentication.principal)
+        // The authentication.principal will be our com.teamtreehouse.User
+        // and not the org.springframework.security.core.userdetails.User
+        // see below: @craigsdennis variant
+        return user;
+//        return new org.springframework.security.core.userdetails
+//                .User(
+//                    user.getUsername(),
+//                    user.getPassword(),
+//                    AuthorityUtils.createAuthorityList(user.getRoles()
+//                )
+//        );
     }
 }

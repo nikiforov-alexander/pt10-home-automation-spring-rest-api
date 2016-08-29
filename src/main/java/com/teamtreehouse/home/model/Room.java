@@ -1,8 +1,12 @@
 package com.teamtreehouse.home.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -22,6 +26,10 @@ public class Room extends BaseEntity {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Device> devices;
 
+    @JsonIgnore
+    @ManyToMany
+    private List<User> administrators;
+
     //
     // Getters and Setters
     //
@@ -34,19 +42,37 @@ public class Room extends BaseEntity {
         this.name = name;
     }
 
-    public int getArea() {
+    public Integer getArea() {
         return area;
     }
 
-    public void setArea(int area) {
+    public void setArea(Integer area) {
         this.area = area;
     }
+
+    public List<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<Device> devices) {
+        this.devices = devices;
+    }
+
+    public List<User> getAdministrators() {
+        return administrators;
+    }
+
+    public void setAdministrators(List<User> administrators) {
+        this.administrators = administrators;
+    }
+
 
     // default constructor for JPA,
     // calls BaseEntity constructor
     public Room() {
         super();
         devices = new ArrayList<>();
+        administrators = new ArrayList<>();
     }
 
     public Room(String name, int area, List<Device> devices) {
@@ -62,19 +88,35 @@ public class Room extends BaseEntity {
         this.area = area;
     }
 
-    public List<Device> getDevices() {
-        return devices;
-    }
-
-    public void setDevices(List<Device> devices) {
-        this.devices = devices;
-    }
-
     // add device used in DataLoader
     public void addDevice(Device device) {
         // set device's room to this room
         device.setRoom(this);
         // add device
         this.devices.add(device);
+    }
+
+    // add user to Room administrators
+    public void addUserToRoomAdministrators(User user) {
+        this.administrators.add(user);
+    }
+
+    /**
+     * Method checking whether this Room.administrators
+     * has object passed as
+     * argument and casted to com.teamtreehouse.model.User
+     * @param object: Principal object returned from
+     *              authentication.principal in @PreAuthorize in
+     *              RoomDao.save method. It is actually our
+     *              com.teamtreehouse.model.User object, but passed
+     *              as Object
+     * @return true: if Room.administrators contain passed User
+     *         false: otherwise
+     */
+    public boolean hasAdministrator(Object object) {
+        User user = (User) object;
+        System.out.println("printing room admins: "
+                + administrators);
+        return administrators.contains(user);
     }
 }
