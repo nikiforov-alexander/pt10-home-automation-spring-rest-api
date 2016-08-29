@@ -39,6 +39,10 @@
     Secure the API so that only users with the ROLE_ADMIN role 
     can create rooms
     <hr>
+* [8.] (#task-8)
+    Validate that room’s area is less than 1000 (sq ft/sq meters) 
+    and ensure friendly JSON messages are returned to the caller.
+    <hr>
 
 <!--Links-->
 
@@ -174,3 +178,18 @@ Under construction...
     added needed dependecy and authorized admin user in
     [DataLoader] to create couple of test rooms.
 <hr>
+8. <a id="task-8"><a/>
+    Validate that room’s area is less than 1000 (sq ft/sq meters) 
+    and ensure friendly JSON messages are returned to the caller.
+    <hr>
+    - In the [Room] class @Max annotation was added with 
+    friendly message.
+    - In the [RestConfig] class `ValidatingListener` was added to
+    to "beforeSave" and "beforeCreate" events, so that when any 
+    device, control or room are created and validation fails, 
+    messages will be returned with JSON to user.
+<hr>
+9. <a id="task-9"><a/>
+    <hr>
+<hr>
+
