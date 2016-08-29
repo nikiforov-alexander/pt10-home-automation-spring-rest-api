@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -24,16 +28,20 @@ public class DataLoader implements ApplicationRunner {
     private final DeviceDao deviceDao;
     private final ControlDao controlDao;
     private final UserDao userDao;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     public DataLoader(RoomDao roomDao,
                       DeviceDao deviceDao,
                       ControlDao controlDao,
-                      UserDao userDao) {
+                      UserDao userDao,
+                      CustomUserDetailsService customUserDetailsService
+                      ) {
         this.roomDao = roomDao;
         this.deviceDao = deviceDao;
         this.controlDao = controlDao;
         this.userDao = userDao;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     /**
@@ -74,6 +82,30 @@ public class DataLoader implements ApplicationRunner {
         userDao.save(admin);
         userDao.save(johnDoe);
 
+        // load user by username as Admin, in order to successfully
+        // create new room: see RoomDao.save @PreAuthorize
+        // If we put here non-admin user we won't be able to
+        // create Room because Access will be denied, because room
+        // that is not created can't have `administrators` before:
+
+        // get "admin" UserDetails object:
+        // casted from "our" com.teamtreehouse...User
+        UserDetails userDetails =
+                customUserDetailsService.loadUserByUsername(
+                        "sa"
+                );
+        // create new authentication token: our authentication object
+        // that will be null however if we want to use it using
+        // @PreAuthorize in RoomDao
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(
+                     userDetails, null, userDetails.getAuthorities()
+                );
+        // set authentication object
+        SecurityContextHolder.getContext().setAuthentication(
+                authenticationToken
+        );
+
         // create n: room/device/controls
         for (int i = 1; i <= 2; i++) {
             // create new Control
@@ -88,9 +120,9 @@ public class DataLoader implements ApplicationRunner {
             Room room = new Room();
             room.setName("room " + i);
             room.setArea(i);
-            // set administrators and add them to room
-            room.setAdministrators(
-                    generateListOfAdministrators()
+            // add usual user "jd" to room administrators
+            room.addUserToRoomAdministrators(
+                    userDao.findByUsername("jd")
             );
 
             // add device to it
@@ -99,6 +131,5 @@ public class DataLoader implements ApplicationRunner {
             // save room
             roomDao.save(room);
         }
-
     }
 }
