@@ -53,6 +53,10 @@
     Add a search resource that provides the ability 
     to find Devices based on a partial name.
     <hr>
+* [11.] (#task-11)
+    Track the last user to modify the control 
+    and report it in control.lastModifiedBy
+    <hr>
 
 <!--Links-->
 
@@ -77,6 +81,8 @@
 <!--Java Classes-->
 [CustomUserDetailsService]:
     ./src/main/java/com/teamtreehouse/home/service/CustomUserDetailsService.java "./src/main/java/com/teamtreehouse/home/service/CustomUserDetailsService.java"
+[ControlEventHandler]:
+    ./src/main/java/com/teamtreehouse/home/handler/ControlEventHandler.java "./src/main/java/com/teamtreehouse/home/handler/ControlEventHandler.java"
 [Application]:
     ./src/main/java/com/teamtreehouse/home/Application.java "./src/main/java/com/teamtreehouse/home/Application.java"
 [BaseEntity]:
@@ -224,5 +230,15 @@ Under construction...
     "query" can be device name that we are looking for.
 <hr>
 11. <a id="task-11"><a/>
+    Track the last user to modify the control 
+    and report it in control.lastModifiedBy
     <hr>
+    For that purpose [ControlEventHandler] class was introduced
+    marked with `@RepositoryEventHandler(Control.class` and
+    handling @HandleBeforeCreate and @HandleBeforeSave events.
+    When [Control] is saved or created, currently logged on
+    user is added to `Control.lastModifiedBy` field.
+    <br>
+    Currently `Control.lastModifiedBy` is in @ManyToOne 
+    relationship with [User]. Hope its right.
 <hr>
