@@ -86,6 +86,8 @@ public class DataLoader implements ApplicationRunner {
         for (int i = 1; i <= 2; i++) {
             // create new Control
             Control control = new Control("control " + i, i);
+            // set admin as last modified user
+            control.setLastModifiedBy(admin);
 
             // create new Device
             Device device = new Device("device " + i);
