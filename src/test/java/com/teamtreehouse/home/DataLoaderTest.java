@@ -34,12 +34,6 @@ public class DataLoaderTest {
 
     @Before
     public void setUp() throws Exception {
-        dataLoader = new DataLoader(
-                roomDao,
-                deviceDao,
-                controlDao,
-                userDao
-        );
     }
 
     @After
@@ -47,48 +41,4 @@ public class DataLoaderTest {
 
     }
 
-    @Test
-    public void generateAdministratorsListShouldGenerateCorrectListOfAdmins()
-            throws Exception {
-        // Arrange:
-        // create testAllUserList with all users
-        // that will be returned when userDao will be called
-        List<User> testAdminList = new ArrayList<>();
-        // create testAdminList that has only users with admin roles
-        // and is considered to be correct list
-        List<User> testAllUsersList = new ArrayList<>();
-        // Arrange:
-        // create two users: normal user and admin user with two roles
-        User normalUser = new User(
-                "Normal User",
-                "username",
-                "password",
-                new String[]{"ROLE_USER"}
-        );
-        User adminUser = new User(
-                "System Administrator",
-                "sa",
-                "password",
-                new String[]{"ROLE_USER", "ROLE_ADMIN"}
-        );
-        // add both users to testAllUsersList
-        testAllUsersList.add(normalUser);
-        testAllUsersList.add(adminUser);
-        // add adminUser to testAdminList
-        testAdminList.add(adminUser);
-        // Arrange that userDao.findAll returns list with
-        // all users
-        when(userDao.findAll()).thenReturn(testAllUsersList);
-
-        // Act and Assert:
-        // When generateListOfAdministrators is called
-        List<User> adminListReturnedByTestedMethod =
-                dataLoader.generateListOfAdministrators();
-        // Then list with one admin should be returned
-        // and equal to arranged testAdminList
-        assertEquals(
-                testAdminList,
-                adminListReturnedByTestedMethod
-        );
-    }
 }
