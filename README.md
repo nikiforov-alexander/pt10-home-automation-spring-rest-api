@@ -57,6 +57,10 @@
     Track the last user to modify the control 
     and report it in control.lastModifiedBy
     <hr>
+* [12.] (#task-12)
+    Ensure that control modifications are versioned so 
+    that clients can use appropriate E-Tags
+    <hr>
 
 <!--Links-->
 
@@ -241,4 +245,18 @@ Under construction...
     <br>
     Currently `Control.lastModifiedBy` is in @ManyToOne 
     relationship with [User]. Hope its right.
+<hr>
+12. <a id="task-12"><a/>
+    Ensure that control modifications are versioned 
+    so that clients can use appropriate E-Tags.
+    <hr>
+    All Model classes [Control], [Device] and [Room] 
+    are versioned, because they extend [BaseEntity]
+    that has `private` field annotated with 
+    @Version.
+<hr>
+### Extra Credit
+13. <a id="task-13"><a/>
+    Add tests to validate all requested additional configuration
+    <hr>
 <hr>
