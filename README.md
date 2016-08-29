@@ -49,6 +49,9 @@
     field for fellow developers who will use your API 
     that explain that the value should represent either 
     square meters or square footage depending on your units of measure.
+* [10.] (#task-10)
+    Add a search resource that provides the ability 
+    to find Devices based on a partial name.
     <hr>
 
 <!--Links-->
@@ -206,4 +209,20 @@ Under construction...
     I've added [rest-messages.properties] file w descriptions to 
     all fields of room, device and control.
 <hr>
-
+10. <a id="task-10"><a/>
+    Add a search resource that provides the ability 
+    to find Devices based on a partial name.
+    <hr>
+    In [DeviceDao] `findByNameContaining` Spring Query method is
+    defined. The implementation will be provided by Spring Data.
+    <br>
+    `@RestResource(rel = "name", path = "containsName")`
+    annotation is added to make the following query 
+    available in browser:
+    `BASE_URI/devices/search/containsName/name=query`
+    Where BASE_URI can be `localhost:8080/api/v1`, and
+    "query" can be device name that we are looking for.
+<hr>
+11. <a id="task-11"><a/>
+    <hr>
+<hr>
