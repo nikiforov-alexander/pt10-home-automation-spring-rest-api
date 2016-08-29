@@ -3,7 +3,10 @@ package com.teamtreehouse.home.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -91,5 +94,29 @@ public class Room extends BaseEntity {
         device.setRoom(this);
         // add device
         this.devices.add(device);
+    }
+
+    // add user to Room administrators
+    public void addUserToRoomAdministrators(User user) {
+        this.administrators.add(user);
+    }
+
+    /**
+     * Method checking whether this Room.administrators
+     * has object passed as
+     * argument and casted to com.teamtreehouse.model.User
+     * @param object: Principal object returned from
+     *              authentication.principal in @PreAuthorize in
+     *              RoomDao.save method. It is actually our
+     *              com.teamtreehouse.model.User object, but passed
+     *              as Object
+     * @return true: if Room.administrators contain passed User
+     *         false: otherwise
+     */
+    public boolean hasAdministrator(Object object) {
+        User user = (User) object;
+        System.out.println("printing room admins: "
+                + administrators);
+        return administrators.contains(user);
     }
 }
