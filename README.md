@@ -43,6 +43,13 @@
     Validate that room’s area is less than 1000 (sq ft/sq meters) 
     and ensure friendly JSON messages are returned to the caller.
     <hr>
+* [9.] (#task-9)
+    Create documentation that is exposed in 
+    Hypermedia Application Language (HAL) for the Room.area 
+    field for fellow developers who will use your API 
+    that explain that the value should represent either 
+    square meters or square footage depending on your units of measure.
+    <hr>
 
 <!--Links-->
 
@@ -190,6 +197,13 @@ Under construction...
     messages will be returned with JSON to user.
 <hr>
 9. <a id="task-9"><a/>
+    Create documentation that is exposed in 
+    Hypermedia Application Language (HAL) for the Room.area 
+    field for fellow developers who will use your API 
+    that explain that the value should represent either 
+    square meters or square footage depending on your units of measure.
     <hr>
+    I've added [rest-messages.properties] file w descriptions to 
+    all fields of room, device and control.
 <hr>
 
