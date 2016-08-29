@@ -35,6 +35,10 @@
 * [6.] (#task-6)
     Ensure that the users repository is not exported
     <hr>
+* [7.] (#task-7)
+    Secure the API so that only users with the ROLE_ADMIN role 
+    can create rooms
+    <hr>
 
 <!--Links-->
 
@@ -157,4 +161,16 @@ Under construction...
     <hr>
     [UserDao] is marked with `@RepositoryRestResource(exported = false)`
     and thus is not exposed to REST API.
+<hr>
+7. <a id="task-7"></a>
+    Secure the API so that only users with the ROLE_ADMIN role 
+    can create rooms
+    <hr>
+    I added responsible @PreAuthorize annotation on top of
+    `save` method in [RoomDao], that will check that user has
+    'ROLE_ADMIN' before saving. In order to create room
+    just like @craigsdennis does in Workshop using
+    [DataLoader] `ApplicationRunner` class, I also
+    added needed dependecy and authorized admin user in
+    [DataLoader] to create couple of test rooms.
 <hr>
