@@ -1,5 +1,6 @@
 package com.teamtreehouse.home.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -17,6 +18,13 @@ public class Control extends BaseEntity{
     // Many controls have one device
     @ManyToOne
     private Device device;
+
+    // Many controls can be last modified by One User
+    // Hope its right. Json Ignore, because all User related
+    // fields should be ignored I think
+    @JsonIgnore
+    @ManyToOne
+    private User lastModifiedBy;
 
     //
     // Getters and Setters
@@ -46,6 +54,13 @@ public class Control extends BaseEntity{
         this.device = device;
     }
 
+    public User getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(User lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
     //
     // Constructors
     //
@@ -60,5 +75,4 @@ public class Control extends BaseEntity{
         this.name = name;
         this.value = value;
     }
-
 }
