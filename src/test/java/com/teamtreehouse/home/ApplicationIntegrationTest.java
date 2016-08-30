@@ -269,4 +269,23 @@ public class ApplicationIntegrationTest {
                         )
                 );
     }
+
+    @Test
+    public void devicesCanBeSearchedByNameContaining() throws Exception {
+        // Arrange: mockMvc is arranged: all requests are allowed
+        // Act and Assert:
+        // When GET request is made to:
+        // BASE_URL/devices/search/containsName?name=1
+        // Then:
+        // - status should be OK
+        // - json should have "_embedded.devices" array with size 1
+        mockMvc.perform(
+                get(BASE_URL + "/devices/search/containsName?name=1" )
+        )
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(
+                jsonPath("$._embedded.devices", hasSize(1))
+        );
+    }
 }
