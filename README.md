@@ -254,6 +254,9 @@ Under construction...
     `BASE_URI/devices/search/containsName/name=query`
     Where BASE_URI can be `localhost:8080/api/v1`, and
     "query" can be device name that we are looking for.
+    <hr>
+    This query is tested in `devicesCanBeSearchedByNameContaining()`
+    test method in [ApplicationIntegrationTest]. 
 <hr>
 11. <a id="task-11"><a/>
     Track the last user to modify the control 
