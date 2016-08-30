@@ -83,6 +83,9 @@
  -->
 
 <!--Java Classes-->
+[ApplicationIntegrationTest]:
+    ./src/test/java/com/teamtreehouse/home/ApplicationIntegrationTest.java "./src/test/java/com/teamtreehouse/home/ApplicationIntegrationTest.java"
+    
 [CustomUserDetailsService]:
     ./src/main/java/com/teamtreehouse/home/service/CustomUserDetailsService.java "./src/main/java/com/teamtreehouse/home/service/CustomUserDetailsService.java"
 [ControlEventHandler]:
@@ -197,6 +200,21 @@ Under construction...
     [DataLoader] `ApplicationRunner` class, I also
     added needed dependecy and authorized admin user in
     [DataLoader] to create couple of test rooms.
+    <hr>
+    I was not able to test this functionality properly.
+    I can test that if user with "ROLE_ADMIN" creates
+    room his request passes, see 
+    `postMethodCreatingNewRoomShouldWorkWithAdminUser`
+    in [ApplicationIntegrationTest]. 
+    <br>
+    Test trying to model situation where user with
+    "ROLE_USER" is trying to create room, throws
+    `NestedServletException` with nested 
+    `AccessDeniedException` and not nice JSON with
+    403. And I don't know workaround. So I have test,
+    that is trying to check that:
+    `postMethodCreatingNewRoomShouldReturnAccessDeniedWithNormalUser`
+    But it does not work properly. 
 <hr>
 8. <a id="task-8"><a/>
     Validate that room’s area is less than 1000 (sq ft/sq meters) 
