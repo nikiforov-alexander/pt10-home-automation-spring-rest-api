@@ -211,7 +211,7 @@ Under construction...
     "ROLE_USER" is trying to create room, throws
     `NestedServletException` with nested 
     `AccessDeniedException` and not nice JSON with
-    403. And I don't know workaround. So I have test,
+    403 Error. And I don't know workaround. So I have test,
     that is trying to check that:
     `postMethodCreatingNewRoomShouldReturnAccessDeniedWithNormalUser`
     But it does not work properly. 
