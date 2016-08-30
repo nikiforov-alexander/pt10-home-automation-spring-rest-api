@@ -251,8 +251,8 @@ Under construction...
     `@RestResource(rel = "name", path = "containsName")`
     annotation is added to make the following query 
     available in browser:
-    `BASE_URI/devices/search/containsName/name=query`
-    Where BASE_URI can be `localhost:8080/api/v1`, and
+    `BASE_URL/devices/search/containsName?name=query`
+    Where BASE_URL can be `localhost:8080/api/v1`, and
     "query" can be device name that we are looking for.
     <hr>
     This query is tested in `devicesCanBeSearchedByNameContaining()`
