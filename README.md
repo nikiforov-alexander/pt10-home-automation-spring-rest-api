@@ -226,6 +226,10 @@ Under construction...
     to "beforeSave" and "beforeCreate" events, so that when any 
     device, control or room are created and validation fails, 
     messages will be returned with JSON to user.
+    <hr>
+    Testing this in 
+    `postMethodCreatingNewRoomWithBigAreaShouldReturnFriendlyError`
+    in [ApplicationIntegrationTest].
 <hr>
 9. <a id="task-9"><a/>
     Create documentation that is exposed in 
