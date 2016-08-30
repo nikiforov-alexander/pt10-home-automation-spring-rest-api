@@ -185,7 +185,7 @@ public class ApplicationIntegrationTest {
     // the scenes.
     @Test(expected = NestedServletException.class)
     public void
-    PostMethodCreatingNewRoomShouldReturnAccessDeniedWithNormalUser()
+    postMethodCreatingNewRoomShouldReturnAccessDeniedWithNormalUser()
             throws Exception {
         // Arrange
         // create JSON from new Room object
@@ -214,4 +214,59 @@ public class ApplicationIntegrationTest {
                 .andDo(print());
     }
 
+    @Test
+    public void postMethodCreatingNewRoomWithBigAreaShouldReturnFriendlyError()
+            throws Exception {
+        // Arrange
+        // create JSON from new Room object with area of 1000 sq.m.
+        String roomJson = toJson(new Room("room3", 1234));
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "sa":
+        UserDetails admin = customUserDetailsService.loadUserByUsername("sa");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/rooms is made with:
+        // 1. authenticated admin user
+        // 2. JSON created from new room
+        // Then:
+        // - status should be 400: Bad Request
+        // - json should have "error" array with size 1
+        // - error[0].entity should be Room
+        // - error[0].message should contain "less than 1000"
+        // - error[0].invalidValue should be "1234"
+        // - error[0].property should be "area"
+        mockMvc.perform(
+                post(BASE_URL + "/rooms")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(roomJson)
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(
+                        jsonPath("$.errors", hasSize(1))
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].entity", equalTo("Room"))
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].message",
+                                containsString("less than 1000")
+                        )
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].invalidValue",
+                                equalTo("1234")
+                        )
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].property",
+                                equalTo("area")
+                        )
+                );
+    }
 }
