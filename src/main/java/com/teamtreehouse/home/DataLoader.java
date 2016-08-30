@@ -41,6 +41,61 @@ public class DataLoader implements ApplicationRunner {
         this.customUserDetailsService = customUserDetailsService;
     }
 
+    private void createCoupleOfTestRoomsWithDevicesAndControls(
+            User user
+    ) {
+        // create n: room/device/controls
+        for (int i = 1; i <= 2; i++) {
+            // create new Control
+            Control control = new Control("control " + i, i);
+            // set admin as last modified user
+            control.setLastModifiedBy(user);
+
+            // create new Device
+            Device device = new Device("device " + i);
+            // add control to it
+            device.addControl(control);
+
+            // create new room
+            Room room = new Room();
+            room.setName("room " + i);
+            room.setArea(i);
+            // add user to room administrators
+            room.addUserToRoomAdministrators(user);
+
+            // add device to it
+            room.addDevice(device);
+
+            // save room
+            roomDao.save(room);
+        }
+    }
+
+    // load user by username as Admin, in order to successfully
+    // create new room: see RoomDao.save @PreAuthorize
+    // If we put here non-admin user we won't be able to
+    // create Room because Access will be denied, because room
+    // that is not created can't have `administrators` before:
+    private void authenticatedUserWithUserName(String username) {
+        // get "admin" UserDetails object:
+        // casted from "our" com.teamtreehouse...User
+        UserDetails userDetails =
+                customUserDetailsService.loadUserByUsername(
+                        "sa"
+                );
+        // create new authentication token: our authentication object
+        // that will be null however if we want to use it using
+        // @PreAuthorize in RoomDao
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities()
+                );
+        // set authentication object
+        SecurityContextHolder.getContext().setAuthentication(
+                authenticationToken
+        );
+    }
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         // create two users: admin and johnDoe
@@ -58,56 +113,9 @@ public class DataLoader implements ApplicationRunner {
         userDao.save(admin);
         userDao.save(johnDoe);
 
-        // load user by username as Admin, in order to successfully
-        // create new room: see RoomDao.save @PreAuthorize
-        // If we put here non-admin user we won't be able to
-        // create Room because Access will be denied, because room
-        // that is not created can't have `administrators` before:
+        authenticatedUserWithUserName("sa");
 
-        // get "admin" UserDetails object:
-        // casted from "our" com.teamtreehouse...User
-        UserDetails userDetails =
-                customUserDetailsService.loadUserByUsername(
-                        "sa"
-                );
-        // create new authentication token: our authentication object
-        // that will be null however if we want to use it using
-        // @PreAuthorize in RoomDao
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(
-                     userDetails, null, userDetails.getAuthorities()
-                );
-        // set authentication object
-        SecurityContextHolder.getContext().setAuthentication(
-                authenticationToken
-        );
+        createCoupleOfTestRoomsWithDevicesAndControls(admin);
 
-        // create n: room/device/controls
-        for (int i = 1; i <= 2; i++) {
-            // create new Control
-            Control control = new Control("control " + i, i);
-            // set admin as last modified user
-            control.setLastModifiedBy(admin);
-
-            // create new Device
-            Device device = new Device("device " + i);
-            // add control to it
-            device.addControl(control);
-
-            // create new room
-            Room room = new Room();
-            room.setName("room " + i);
-            room.setArea(i);
-            // add usual user "jd" to room administrators
-            room.addUserToRoomAdministrators(
-                    userDao.findByUsername("jd")
-            );
-
-            // add device to it
-            room.addDevice(device);
-
-            // save room
-            roomDao.save(room);
-        }
     }
 }
