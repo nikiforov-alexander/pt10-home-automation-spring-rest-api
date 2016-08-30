@@ -270,6 +270,10 @@ Under construction...
     <br>
     Currently `Control.lastModifiedBy` is in @ManyToOne 
     relationship with [User]. Hope its right.
+    <hr>
+    Test checking this is method called:
+    `afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl()`
+    in [ApplicationIntegrationTest].    
 <hr>
 12. <a id="task-12"><a/>
     Ensure that control modifications are versioned 
