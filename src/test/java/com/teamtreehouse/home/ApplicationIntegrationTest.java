@@ -5,6 +5,7 @@ import com.teamtreehouse.home.config.WebSecurityConfiguration;
 import com.teamtreehouse.home.dao.ControlDao;
 import com.teamtreehouse.home.dao.DeviceDao;
 import com.teamtreehouse.home.dao.RoomDao;
+import com.teamtreehouse.home.model.Control;
 import com.teamtreehouse.home.model.Room;
 import com.teamtreehouse.home.service.CustomUserDetailsService;
 import org.junit.After;
@@ -96,6 +97,9 @@ public class ApplicationIntegrationTest {
     // SecurityMockMvcRequestPostProcessors
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    private ControlDao controlDao;
 
     // set up : inject webAppContext into our mockMvc and build mockMvc
     @Before
@@ -286,6 +290,38 @@ public class ApplicationIntegrationTest {
         .andExpect(status().isOk())
         .andExpect(
                 jsonPath("$._embedded.devices", hasSize(1))
+        );
+    }
+
+    @Test
+    public void afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl()
+            throws Exception {
+        // Arrange
+        // create JSON from new Control object
+        String controlJson = toJson(new Control("test control", 1));
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "sa":
+        UserDetails admin = customUserDetailsService.loadUserByUsername("sa");
+
+        // Act and Assert:
+        // When POST request is made to create new control
+        // Then status should be 201 created
+        mockMvc.perform(
+                post(BASE_URL + "/controls")
+                .with(
+                        SecurityMockMvcRequestPostProcessors.user(
+                                admin
+                        )
+                )
+                .contentType(contentType)
+                .content(controlJson)
+        ).andDo(print())
+        .andExpect(status().isCreated());
+        // Then lastModifedBy User of newly created Control should be
+        // admin user
+        assertThat(
+                admin,
+                equalTo(controlDao.findOne(3L).getLastModifiedBy())
         );
     }
 }
