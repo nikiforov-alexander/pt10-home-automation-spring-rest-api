@@ -329,7 +329,7 @@ public class ApplicationIntegrationTest {
                 .content(controlJson)
         ).andDo(print())
         .andExpect(status().isCreated());
-        // Then lastModifedBy User of newly created Control should be
+        // Then lastModifiedBy User of newly created Control should be
         // admin user
         assertThat(
                 admin,
@@ -362,7 +362,7 @@ public class ApplicationIntegrationTest {
     }
 
     @Test
-    public void roomsCanBeSearchedByNameAndAreaLessThan() throws Exception {
+    public void roomsCanBeSearchedByName() throws Exception {
         // Arrange: mockMvc is arranged: all requests are allowed
         // There are two rooms
         //  { name : "room 1", area : 1 }
@@ -370,8 +370,8 @@ public class ApplicationIntegrationTest {
 
         // Act and Assert:
         // When GET request is made to:
-        // BASE_URL/devices/search/has-name-and-area-less-than?name=room+1&area=2
-        // or BASE_URL/devices/search/has-name-and-area-less-than?name=room%201&area=2
+        // BASE_URL/devices/search/has-name?name=room+1
+        // or BASE_URL/devices/search/has-name?name=room%201
         // Then:
         // - status should be OK
         // - json should have "_embedded.rooms" array with size 1
@@ -381,7 +381,33 @@ public class ApplicationIntegrationTest {
                 // here i use space between "room 1" because encoding is done
                 // automatically
                 get(BASE_URL + "/rooms/search/" +
-                        "has-name-and-area-less-than?name=room 1&area=2" )
+                        "has-name?name=room 1" )
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(
+                        jsonPath("$._embedded.rooms", hasSize(1))
+                );
+    }
+    @Test
+    public void roomsCanBeSearchedByAreaLessThan() throws Exception {
+        // Arrange: mockMvc is arranged: all requests are allowed
+        // There are two rooms
+        //  { name : "room 1", area : 1 }
+        //  { name : "room 2", area : 2 }
+
+        // Act and Assert:
+        // When GET request is made to:
+        // BASE_URL/devices/search/has-area-less-than?&area=2
+        // or BASE_URL/devices/search/has-area-less-than?&area=2
+        // Then:
+        // - status should be OK
+        // - json should have "_embedded.rooms" array with size 1
+        //   which means one result test room w name "room 1"
+        //   and with area "1"
+        mockMvc.perform(
+                get(BASE_URL + "/rooms/search/" +
+                        "has-area-less-than?area=2" )
                 )
                 .andDo(print())
                 .andExpect(status().isOk())

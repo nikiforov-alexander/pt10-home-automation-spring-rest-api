@@ -21,14 +21,24 @@ public interface RoomDao
     Room save(@Param("room") Room room);
 
     // makes this GET request possible:
-    // BASE_URL/rooms/search/has-name-and-area-less-than/?name=name&area=1
+    // BASE_URL/rooms/search/has-area-less-than/?area=1
     // rel changes link name in HATEOAS _links.. I don't really know
     // what it should be here, so we'll just duplicate
     @RestResource(
-            rel = "has-name-and-area-less-than",
-            path = "has-name-and-area-less-than")
-    Page<Room> findByNameAndAreaLessThan(
-            @Param("name") String name,
+            rel = "has-area-less-than",
+            path = "has-area-less-than")
+    Page<Room> findByAreaLessThan(
             @Param("area") Integer area,
+            Pageable pageable);
+
+    // makes this GET request possible:
+    // BASE_URL/rooms/search/has-name/?name=name
+    // rel changes link name in HATEOAS _links.. I don't really know
+    // what it should be here, so we'll just duplicate
+    @RestResource(
+            rel = "has-name",
+            path = "has-name")
+    Page<Room> findByName(
+            @Param("name") String name,
             Pageable pageable);
 }

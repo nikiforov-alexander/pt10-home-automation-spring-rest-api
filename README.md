@@ -93,6 +93,10 @@
 <!--Java Classes-->
 [ApplicationIntegrationTest]:
     ./src/test/java/com/teamtreehouse/home/ApplicationIntegrationTest.java "./src/test/java/com/teamtreehouse/home/ApplicationIntegrationTest.java"
+[DeviceDaoTest]:
+    ./src/test/java/com/teamtreehouse/home/dao/DeviceDaoTest.java "./src/test/java/com/teamtreehouse/home/dao/DeviceDaoTest.java"
+[RoomDaoTest]:
+    ./src/test/java/com/teamtreehouse/home/dao/RoomDaoTest.java "./src/test/java/com/teamtreehouse/home/dao/RoomDaoTest.java"
     
 [CustomUserDetailsService]:
     ./src/main/java/com/teamtreehouse/home/service/CustomUserDetailsService.java "./src/main/java/com/teamtreehouse/home/service/CustomUserDetailsService.java"
@@ -301,39 +305,55 @@ Under construction...
 13. <a id="task-13"><a/>
     Add tests to validate all requested additional configuration
     <hr>
+    [DeviceDao] tests in [DeviceDaoTest]:
+    - `devicesCanBeSearchedByNameContaining`: 
+        checks [Task 10](#task-10).
+    <hr>
+    [RoomDao] tests in [RoomDaoTest]:
+    - `userWithAdminRoleCanCreateRoom`: 
+        checks [Task 7](#task-7)
+    - `userWithSimpleRoleCannotCreateRoom`: 
+        checks [Task 7](#task-7)
+    - `roomsCanBeSearchedByName` 
+        checks [Task 14](#task-14)
+    - `roomsCanBeSearchedByAreaLessThan`: 
+        checks [Task 14](#task-14)
+    <hr>
     Integration tests (or functional I guess) are available
     in [ApplicationIntegrationTest] and are called:
     - `getRequestToRoomsPageReturnsTwoRooms`:
         simple tests basically checking that GET request to rooms
         can be made and HATEOAS links and paging is there.
     - `postMethodCreatingNewRoomShouldWorkWithAdminUser`:
-        test checking that Admin user can create new Room.
+        test checking [Task 7](#task-7)
     - `postMethodCreatingNewRoomShouldReturnAccessDeniedWithNormalUser`:
-        this test does not work, it throws `NestedServletException`
-        with nested `AccessDeniedException`, but I decided to leave it
-        for future TODO.       
+        test checking [Task 7](#task-7)
     - `postMethodCreatingNewRoomWithBigAreaShouldReturnFriendlyError`:
-        checks that creating new rooms with area more than 1000 
-        returns friendly validation error.
+        checks [Task 8](#task-8)
     - `devicesCanBeSearchedByNameContaining`:
-        checks that search request can be made and
-        page with results is returned.
+        checks [Task 10](#task-10)
     - `afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl`:
-        checks that after creation of Control, member 
-        `Control.lastModifiedBy` is set to currently logged in User.
+        checks [Task 11](#task-11)
     - `roomDetailPageShouldHaveEtagHeader`:
-       checks that room details page have "Etag" header.
+        checks [Task 12](#task-12)
+    - `roomsCanBeSearchedByAreaLessThan`:
+        checks [Task 14](#task-14)
+    - `roomsCanBeSearchedByName`:
+        checks [Task 14](#task-14)
 <hr>
 14. <a id="task-14"><a/>
     Add additional searches to find rooms by name and 
     by less than a specified area
     <hr>
     In [RoomDao] Spring query method was introduced:
-    `findByNameAndAreaLessThan`. It does exactly this:
-    makes following GET request available:
-    `BASE_URL/rooms/search/has-name-and-area-less-than/?name=name&area=1`
+    `findByAreaLessThan` and `findByName`. They 
+    make following GET requests available:
+    - `BASE_URL/rooms/search/has-area-less-than/?area=1`
+    - `BASE_URL/rooms/search/has-name/?name=name`
     <hr>
     The functionality is tested in 
-    `roomsCanBeSearchedByNameAndAreaLessThan` method in
-    [ApplicationIntegrationTest]
+    - `roomsCanBeSearchedByName` in [RoomDaoTest]
+    - `roomsCanBeSearchedByAreaLessThan` in [RoomDaoTest]
+    - `roomsCanBeSearchedByAreaLessThan` in [ApplicationIntegrationTest]
+    - `roomsCanBeSearchedByName` in [ApplicationIntegrationTest]
 <hr>
