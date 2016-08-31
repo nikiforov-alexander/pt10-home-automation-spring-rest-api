@@ -14,7 +14,7 @@ public interface DeviceDao
     // makes this query possible:
     // BASE_URL/devices/search/contains-name?name=query
     // that will search for all devices containing "query" in name
-    @RestResource(rel = "name", path = "contains-name")
+    @RestResource(rel = "contains-name", path = "contains-name")
     Page<Device> findByNameContaining(
             @Param("name") String name,
             Pageable pageable);
