@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 public interface DeviceDao
         extends PagingAndSortingRepository<Device, Long> {
     // makes this query possible:
-    // BASE_URL/devices/search/containsName?name=query
+    // BASE_URL/devices/search/contains-name?name=query
     // that will search for all devices containing "query" in name
-    @RestResource(rel = "name", path = "containsName")
+    @RestResource(rel = "name", path = "contains-name")
     Page<Device> findByNameContaining(
             @Param("name") String name,
             Pageable pageable);
