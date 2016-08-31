@@ -324,4 +324,25 @@ public class ApplicationIntegrationTest {
                 equalTo(controlDao.findOne(3L).getLastModifiedBy())
         );
     }
+
+    @Test
+    public void roomDetailPageShouldHaveEtagHeader()
+            throws Exception {
+        // Arrange: mockMvc is arranged to perform requests
+
+        // Act and Assert:
+        // When GET request to room details page is made
+        // Then:
+        // - status should be OK
+        // - response should have header "Etag" with some
+        //   value
+        mockMvc.perform(
+                get(BASE_URL + "/rooms/1")
+        )
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(
+                header().string("Etag", anything())
+        );
+    }
 }
