@@ -10,6 +10,11 @@ public abstract class BaseEntity {
     @Version
     private Long version;
 
+    public Long getId() {
+        return id;
+    }
+
+
     protected BaseEntity() {
         id = null;
     }
