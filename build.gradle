@@ -35,5 +35,20 @@ dependencies {
     // spring boot starter test: includes Mockito and other helpful
     // classes
     testCompile 'org.springframework.boot:spring-boot-starter-test'
+
+
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-test
+    // this is needed to use
+    // SecurityMockMvcRequestPostProcessors in tests
+    testCompile group: 'org.springframework.security',
+            name: 'spring-security-test', version: '4.0.0.RELEASE'
+
+
+    // to resolve
+    // java.lang.NoClassDefFoundError: com/jayway/jsonpath/InvalidPathException
+    // https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
+    // took from here:
+    // https://github.com/spring-guides/tut-bookmarks/blob/master/pom.xml
+    testCompile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.2.0'
 }
 

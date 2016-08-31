@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.Entity;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -104,6 +105,7 @@ public class User extends BaseEntity implements UserDetails {
         super();
     }
 
+
     public User(
             String name,
             String username,
@@ -114,5 +116,32 @@ public class User extends BaseEntity implements UserDetails {
         this.username = username;
         setPassword(password);
         this.roles = roles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (name != null ? !name.equals(user.name) : user.name != null)
+            return false;
+        if (username != null ? !username.equals(user.username) : user.username != null)
+            return false;
+        if (password != null ? !password.equals(user.password) : user.password != null)
+            return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        return Arrays.equals(roles, user.roles);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(roles);
+        return result;
     }
 }

@@ -61,6 +61,14 @@
     Ensure that control modifications are versioned so 
     that clients can use appropriate E-Tags
     <hr>
+* [13.] (#task-13)
+    Add tests to validate all requested additional configuration
+    <hr>
+* [14.] (#task-14)
+    Add additional searches to find rooms by name and 
+    by less than a specified area
+    <hr>
+    
 
 <!--Links-->
 
@@ -83,6 +91,9 @@
  -->
 
 <!--Java Classes-->
+[ApplicationIntegrationTest]:
+    ./src/test/java/com/teamtreehouse/home/ApplicationIntegrationTest.java "./src/test/java/com/teamtreehouse/home/ApplicationIntegrationTest.java"
+    
 [CustomUserDetailsService]:
     ./src/main/java/com/teamtreehouse/home/service/CustomUserDetailsService.java "./src/main/java/com/teamtreehouse/home/service/CustomUserDetailsService.java"
 [ControlEventHandler]:
@@ -197,6 +208,21 @@ Under construction...
     [DataLoader] `ApplicationRunner` class, I also
     added needed dependecy and authorized admin user in
     [DataLoader] to create couple of test rooms.
+    <hr>
+    I was not able to test this functionality properly.
+    I can test that if user with "ROLE_ADMIN" creates
+    room his request passes, see 
+    `postMethodCreatingNewRoomShouldWorkWithAdminUser`
+    in [ApplicationIntegrationTest]. 
+    <br>
+    Test trying to model situation where user with
+    "ROLE_USER" is trying to create room, throws
+    `NestedServletException` with nested 
+    `AccessDeniedException` and not nice JSON with
+    403 Error. And I don't know workaround. So I have test,
+    that is trying to check that:
+    `postMethodCreatingNewRoomShouldReturnAccessDeniedWithNormalUser`
+    But it does not work properly. 
 <hr>
 8. <a id="task-8"><a/>
     Validate that room’s area is less than 1000 (sq ft/sq meters) 
@@ -208,6 +234,10 @@ Under construction...
     to "beforeSave" and "beforeCreate" events, so that when any 
     device, control or room are created and validation fails, 
     messages will be returned with JSON to user.
+    <hr>
+    Testing this in 
+    `postMethodCreatingNewRoomWithBigAreaShouldReturnFriendlyError`
+    in [ApplicationIntegrationTest].
 <hr>
 9. <a id="task-9"><a/>
     Create documentation that is exposed in 
@@ -226,12 +256,15 @@ Under construction...
     In [DeviceDao] `findByNameContaining` Spring Query method is
     defined. The implementation will be provided by Spring Data.
     <br>
-    `@RestResource(rel = "name", path = "containsName")`
+    `@RestResource(rel = "name", path = "contains-name")`
     annotation is added to make the following query 
     available in browser:
-    `BASE_URI/devices/search/containsName/name=query`
-    Where BASE_URI can be `localhost:8080/api/v1`, and
+    `BASE_URL/devices/search/contains-name?name=query`
+    Where BASE_URL can be `localhost:8080/api/v1`, and
     "query" can be device name that we are looking for.
+    <hr>
+    This query is tested in `devicesCanBeSearchedByNameContaining()`
+    test method in [ApplicationIntegrationTest]. 
 <hr>
 11. <a id="task-11"><a/>
     Track the last user to modify the control 
@@ -245,6 +278,10 @@ Under construction...
     <br>
     Currently `Control.lastModifiedBy` is in @ManyToOne 
     relationship with [User]. Hope its right.
+    <hr>
+    Test checking this is method called:
+    `afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl()`
+    in [ApplicationIntegrationTest].    
 <hr>
 12. <a id="task-12"><a/>
     Ensure that control modifications are versioned 
@@ -254,9 +291,49 @@ Under construction...
     are versioned, because they extend [BaseEntity]
     that has `private` field annotated with 
     @Version.
+    <hr>
+    Test checking "Etag" header for room detail
+    page is situated in
+    [ApplicationIntegrationTest] and is called:
+    `roomDetailPageShouldHaveEtagHeader()`
 <hr>
 ### Extra Credit
 13. <a id="task-13"><a/>
     Add tests to validate all requested additional configuration
     <hr>
+    Integration tests (or functional I guess) are available
+    in [ApplicationIntegrationTest] and are called:
+    - `getRequestToRoomsPageReturnsTwoRooms`:
+        simple tests basically checking that GET request to rooms
+        can be made and HATEOAS links and paging is there.
+    - `postMethodCreatingNewRoomShouldWorkWithAdminUser`:
+        test checking that Admin user can create new Room.
+    - `postMethodCreatingNewRoomShouldReturnAccessDeniedWithNormalUser`:
+        this test does not work, it throws `NestedServletException`
+        with nested `AccessDeniedException`, but I decided to leave it
+        for future TODO.       
+    - `postMethodCreatingNewRoomWithBigAreaShouldReturnFriendlyError`:
+        checks that creating new rooms with area more than 1000 
+        returns friendly validation error.
+    - `devicesCanBeSearchedByNameContaining`:
+        checks that search request can be made and
+        page with results is returned.
+    - `afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl`:
+        checks that after creation of Control, member 
+        `Control.lastModifiedBy` is set to currently logged in User.
+    - `roomDetailPageShouldHaveEtagHeader`:
+       checks that room details page have "Etag" header.
+<hr>
+14. <a id="task-14"><a/>
+    Add additional searches to find rooms by name and 
+    by less than a specified area
+    <hr>
+    In [RoomDao] Spring query method was introduced:
+    `findByNameAndAreaLessThan`. It does exactly this:
+    makes following GET request available:
+    `BASE_URL/rooms/search/has-name-and-area-less-than/?name=name&area=1`
+    <hr>
+    The functionality is tested in 
+    `roomsCanBeSearchedByNameAndAreaLessThan` method in
+    [ApplicationIntegrationTest]
 <hr>
