@@ -61,6 +61,10 @@
     Ensure that control modifications are versioned so 
     that clients can use appropriate E-Tags
     <hr>
+* [13.] (#task-13)
+    Add tests to validate all requested additional configuration
+    <hr>
+    
 
 <!--Links-->
 
@@ -292,5 +296,30 @@ Under construction...
 ### Extra Credit
 13. <a id="task-13"><a/>
     Add tests to validate all requested additional configuration
+    <hr>
+    Integration tests (or functional I guess) are available
+    in [ApplicationIntegrationTest] and are called:
+    - `getRequestToRoomsPageReturnsTwoRooms`:
+        simple tests basically checking that GET request to rooms
+        can be made and HATEOAS links and paging is there.
+    - `postMethodCreatingNewRoomShouldWorkWithAdminUser`:
+        test checking that Admin user can create new Room.
+    - `postMethodCreatingNewRoomShouldReturnAccessDeniedWithNormalUser`:
+        this test does not work, it throws `NestedServletException`
+        with nested `AccessDeniedException`, but I decided to leave it
+        for future TODO.       
+    - `postMethodCreatingNewRoomWithBigAreaShouldReturnFriendlyError`:
+        checks that creating new rooms with area more than 1000 
+        returns friendly validation error.
+    - `devicesCanBeSearchedByNameContaining`:
+        checks that search request can be made and
+        page with results is returned.
+    - `afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl`:
+        checks that after creation of Control, member 
+        `Control.lastModifiedBy` is set to currently logged in User.
+    - `roomDetailPageShouldHaveEtagHeader`:
+       checks that room details page have "Etag" header.
+<hr>
+14. <a id="task-14"><a/>
     <hr>
 <hr>
