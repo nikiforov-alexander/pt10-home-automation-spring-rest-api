@@ -329,11 +329,14 @@ Under construction...
     by less than a specified area
     <hr>
     In [RoomDao] Spring query method was introduced:
-    `findByNameAndAreaLessThan`. It does exactly this:
-    makes following GET request available:
-    `BASE_URL/rooms/search/has-name-and-area-less-than/?name=name&area=1`
+    `findByAreaLessThan` and `findByName`. They 
+    make following GET requests available:
+    - `BASE_URL/rooms/search/has-area-less-than/?area=1`
+    - `BASE_URL/rooms/search/has-name/?name=name`
     <hr>
     The functionality is tested in 
-    `roomsCanBeSearchedByNameAndAreaLessThan` method in
-    [ApplicationIntegrationTest]
+    - `roomsCanBeSearchedByName` in [RoomDao]
+    - `roomsCanBeSearchedByAreaLessThan` in [RoomDao]
+    - `roomsCanBeSearchedByAreaLessThan` in [ApplicationIntegrationTest]
+    - `roomsCanBeSearchedByName` in [ApplicationIntegrationTest]
 <hr>
