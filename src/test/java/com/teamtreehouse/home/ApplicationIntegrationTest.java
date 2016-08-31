@@ -1,14 +1,9 @@
 package com.teamtreehouse.home;
 
-import com.teamtreehouse.home.config.RestConfig;
-import com.teamtreehouse.home.config.WebSecurityConfiguration;
 import com.teamtreehouse.home.dao.ControlDao;
-import com.teamtreehouse.home.dao.DeviceDao;
-import com.teamtreehouse.home.dao.RoomDao;
 import com.teamtreehouse.home.model.Control;
 import com.teamtreehouse.home.model.Room;
 import com.teamtreehouse.home.service.CustomUserDetailsService;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,8 +26,9 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.junit.Assert.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -98,8 +94,17 @@ public class ApplicationIntegrationTest {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    // autowire control dao to check later that newly created
+    // control in controlDao should have logged on user in
+    // its lastModifiedBy field.
     @Autowired
     private ControlDao controlDao;
+
+    // set server port number to 8081, just in case so that
+    // our test does not interfere with bootRun
+    static {
+        System.setProperty("server.port", "8081");
+    }
 
     // set up : inject webAppContext into our mockMvc and build mockMvc
     @Before
@@ -277,6 +282,9 @@ public class ApplicationIntegrationTest {
     @Test
     public void devicesCanBeSearchedByNameContaining() throws Exception {
         // Arrange: mockMvc is arranged: all requests are allowed
+        // There are two devices loaded by DataLoader class
+        // { name : "device 1" }
+        // { name : "device 2" }
         // Act and Assert:
         // When GET request is made to:
         // BASE_URL/devices/search/contains-name?name=1
@@ -296,7 +304,11 @@ public class ApplicationIntegrationTest {
     @Test
     public void afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl()
             throws Exception {
-        // Arrange
+        // Arrange: mockMvc lets GET requests to be made
+        // There are two controls loaded by DatabaseLoader:
+        //  { name : "control 1", value : 1 }
+        //  { name : "control 2", value : 2 }
+
         // create JSON from new Control object
         String controlJson = toJson(new Control("test control", 1));
         // create UsernamePasswordAuthenticationToken with
@@ -329,6 +341,9 @@ public class ApplicationIntegrationTest {
     public void roomDetailPageShouldHaveEtagHeader()
             throws Exception {
         // Arrange: mockMvc is arranged to perform requests
+        // There are two rooms loaded
+        //  { name : "room 1", area : 1 }
+        //  { name : "room 2", area : 2 }
 
         // Act and Assert:
         // When GET request to room details page is made
@@ -344,5 +359,34 @@ public class ApplicationIntegrationTest {
         .andExpect(
                 header().string("Etag", anything())
         );
+    }
+
+    @Test
+    public void roomsCanBeSearchedByNameAndAreaLessThan() throws Exception {
+        // Arrange: mockMvc is arranged: all requests are allowed
+        // There are two rooms
+        //  { name : "room 1", area : 1 }
+        //  { name : "room 2", area : 2 }
+
+        // Act and Assert:
+        // When GET request is made to:
+        // BASE_URL/devices/search/has-name-and-area-less-than?name=room+1&area=2
+        // or BASE_URL/devices/search/has-name-and-area-less-than?name=room%201&area=2
+        // Then:
+        // - status should be OK
+        // - json should have "_embedded.rooms" array with size 1
+        //   which means one result test room w name "room 1"
+        //   and with area "1"
+        mockMvc.perform(
+                // here i use space between "room 1" because encoding is done
+                // automatically
+                get(BASE_URL + "/rooms/search/" +
+                        "has-name-and-area-less-than?name=room 1&area=2" )
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(
+                        jsonPath("$._embedded.rooms", hasSize(1))
+                );
     }
 }
