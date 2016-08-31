@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -69,5 +70,20 @@ public class RoomDaoTest {
                 ),
                 notNullValue(Room.class)
         );
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void userWithSimpleRoleCannotCreateRoom() throws Exception {
+        // Arrange:
+        // login "jd" user
+        setUpUserByUsername("jd");
+        // create test room
+        Room room = new Room("test room", 1);
+
+        // Act and Assert:
+        // When test room is saved with user
+        roomDao.save(room);
+
+        // Then AccessDeniedException should be thrown
     }
 }
