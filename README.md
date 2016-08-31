@@ -283,6 +283,11 @@ Under construction...
     are versioned, because they extend [BaseEntity]
     that has `private` field annotated with 
     @Version.
+    <hr>
+    Test checking "Etag" header for room detail
+    page is situated in
+    [ApplicationIntegrationTest] and is called:
+    `roomDetailPageShouldHaveEtagHeader()`
 <hr>
 ### Extra Credit
 13. <a id="task-13"><a/>
