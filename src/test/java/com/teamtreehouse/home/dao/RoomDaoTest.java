@@ -8,12 +8,16 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -85,5 +89,49 @@ public class RoomDaoTest {
         roomDao.save(room);
 
         // Then AccessDeniedException should be thrown
+    }
+
+    @Test
+    public void roomsCanBeSearchedByName() throws Exception {
+        // Arrange:
+        // login admin user
+        setUpUserByUsername("sa");
+        // add test room to roomDao with name "test"
+        roomDao.save(new Room("test", 1));
+
+        // Act and Assert:
+        // When we try to search by name "test"
+        Page<Room> page = roomDao.findByName("test", new PageRequest(1, 20));
+
+        // Then we should get page with 1L total elements
+        // and 1 page
+        assertThat(
+                page.getTotalElements(), is(1L)
+        );
+        assertThat(
+                page.getTotalPages(), is(1)
+        );
+    }
+
+    @Test
+    public void roomsCanBeSearchedByAreaLessThan() throws Exception {
+        // Arrange:
+        // login admin user
+        setUpUserByUsername("sa");
+        // add test room to roomDao with area 1
+        roomDao.save(new Room("room with area 0", 0));
+
+        // Act and Assert:
+        // When we try to search by area less than 1
+        Page<Room> page = roomDao.findByAreaLessThan(1 , new PageRequest(1, 20));
+
+        // Then we should get page with 1L total elements
+        // and 1 page
+        assertThat(
+                page.getTotalElements(), is(1L)
+        );
+        assertThat(
+                page.getTotalPages(), is(1)
+        );
     }
 }
