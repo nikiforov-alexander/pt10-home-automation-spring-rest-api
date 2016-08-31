@@ -93,6 +93,10 @@
 <!--Java Classes-->
 [ApplicationIntegrationTest]:
     ./src/test/java/com/teamtreehouse/home/ApplicationIntegrationTest.java "./src/test/java/com/teamtreehouse/home/ApplicationIntegrationTest.java"
+[DeviceDaoTest]:
+    ./src/test/java/com/teamtreehouse/home/dao/DeviceDaoTest.java "./src/test/java/com/teamtreehouse/home/dao/DeviceDaoTest.java"
+[RoomDaoTest]:
+    ./src/test/java/com/teamtreehouse/home/dao/RoomDaoTest.java "./src/test/java/com/teamtreehouse/home/dao/RoomDaoTest.java"
     
 [CustomUserDetailsService]:
     ./src/main/java/com/teamtreehouse/home/service/CustomUserDetailsService.java "./src/main/java/com/teamtreehouse/home/service/CustomUserDetailsService.java"
@@ -335,8 +339,8 @@ Under construction...
     - `BASE_URL/rooms/search/has-name/?name=name`
     <hr>
     The functionality is tested in 
-    - `roomsCanBeSearchedByName` in [RoomDao]
-    - `roomsCanBeSearchedByAreaLessThan` in [RoomDao]
+    - `roomsCanBeSearchedByName` in [RoomDaoTest]
+    - `roomsCanBeSearchedByAreaLessThan` in [RoomDaoTest]
     - `roomsCanBeSearchedByAreaLessThan` in [ApplicationIntegrationTest]
     - `roomsCanBeSearchedByName` in [ApplicationIntegrationTest]
 <hr>
