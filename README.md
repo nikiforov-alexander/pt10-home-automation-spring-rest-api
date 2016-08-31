@@ -64,6 +64,10 @@
 * [13.] (#task-13)
     Add tests to validate all requested additional configuration
     <hr>
+* [14.] (#task-14)
+    Add additional searches to find rooms by name and 
+    by less than a specified area
+    <hr>
     
 
 <!--Links-->
@@ -252,10 +256,10 @@ Under construction...
     In [DeviceDao] `findByNameContaining` Spring Query method is
     defined. The implementation will be provided by Spring Data.
     <br>
-    `@RestResource(rel = "name", path = "containsName")`
+    `@RestResource(rel = "name", path = "contains-name")`
     annotation is added to make the following query 
     available in browser:
-    `BASE_URL/devices/search/containsName?name=query`
+    `BASE_URL/devices/search/contains-name?name=query`
     Where BASE_URL can be `localhost:8080/api/v1`, and
     "query" can be device name that we are looking for.
     <hr>
@@ -321,5 +325,7 @@ Under construction...
        checks that room details page have "Etag" header.
 <hr>
 14. <a id="task-14"><a/>
+    Add additional searches to find rooms by name and 
+    by less than a specified area
     <hr>
 <hr>
