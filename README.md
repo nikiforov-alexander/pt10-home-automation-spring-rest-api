@@ -305,28 +305,41 @@ Under construction...
 13. <a id="task-13"><a/>
     Add tests to validate all requested additional configuration
     <hr>
+    [DeviceDao] tests in [DeviceDaoTest]:
+    - `devicesCanBeSearchedByNameContaining`: 
+        checks [Task 10](#task-10).
+    <hr>
+    [RoomDao] tests in [RoomDaoTest]:
+    - `userWithAdminRoleCanCreateRoom`: 
+        checks [Task 7](#task-7)
+    - `userWithSimpleRoleCannotCreateRoom`: 
+        checks [Task 7](#task-7)
+    - `roomsCanBeSearchedByName` 
+        checks [Task 14](#task-14)
+    - `roomsCanBeSearchedByAreaLessThan`: 
+        checks [Task 14](#task-14)
+    <hr>
     Integration tests (or functional I guess) are available
     in [ApplicationIntegrationTest] and are called:
     - `getRequestToRoomsPageReturnsTwoRooms`:
         simple tests basically checking that GET request to rooms
         can be made and HATEOAS links and paging is there.
     - `postMethodCreatingNewRoomShouldWorkWithAdminUser`:
-        test checking that Admin user can create new Room.
+        test checking [Task 7](#task-7)
     - `postMethodCreatingNewRoomShouldReturnAccessDeniedWithNormalUser`:
-        this test does not work, it throws `NestedServletException`
-        with nested `AccessDeniedException`, but I decided to leave it
-        for future TODO.       
+        test checking [Task 7](#task-7)
     - `postMethodCreatingNewRoomWithBigAreaShouldReturnFriendlyError`:
-        checks that creating new rooms with area more than 1000 
-        returns friendly validation error.
+        checks [Task 8](#task-8)
     - `devicesCanBeSearchedByNameContaining`:
-        checks that search request can be made and
-        page with results is returned.
+        checks [Task 10](#task-10)
     - `afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl`:
-        checks that after creation of Control, member 
-        `Control.lastModifiedBy` is set to currently logged in User.
+        checks [Task 11](#task-11)
     - `roomDetailPageShouldHaveEtagHeader`:
-       checks that room details page have "Etag" header.
+        checks [Task 12](#task-12)
+    - `roomsCanBeSearchedByAreaLessThan`:
+        checks [Task 14](#task-14)
+    - `roomsCanBeSearchedByName`:
+        checks [Task 14](#task-14)
 <hr>
 14. <a id="task-14"><a/>
     Add additional searches to find rooms by name and 
