@@ -328,4 +328,12 @@ Under construction...
     Add additional searches to find rooms by name and 
     by less than a specified area
     <hr>
+    In [RoomDao] Spring query method was introduced:
+    `findByNameAndAreaLessThan`. It does exactly this:
+    makes following GET request available:
+    `BASE_URL/rooms/search/has-name-and-area-less-than/?name=name&area=1`
+    <hr>
+    The functionality is tested in 
+    `roomsCanBeSearchedByNameAndAreaLessThan` method in
+    [ApplicationIntegrationTest]
 <hr>
