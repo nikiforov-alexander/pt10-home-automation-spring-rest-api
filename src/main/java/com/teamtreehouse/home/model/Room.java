@@ -3,10 +3,7 @@ package com.teamtreehouse.home.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -27,7 +24,10 @@ public class Room extends BaseEntity {
     private List<Device> devices;
 
     @JsonIgnore
-    @ManyToMany
+    // I'll let this to be EAGER because I'm unfortunately do not
+    // know how to instantiate lazily room.administrators :(
+    // this is definitely one of the things to do in future
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<User> administrators;
 
     //
