@@ -1,7 +1,9 @@
 package com.teamtreehouse.home;
 
 import com.teamtreehouse.home.dao.ControlDao;
+import com.teamtreehouse.home.dao.DeviceDao;
 import com.teamtreehouse.home.model.Control;
+import com.teamtreehouse.home.model.Device;
 import com.teamtreehouse.home.model.Room;
 import com.teamtreehouse.home.service.CustomUserDetailsService;
 import org.junit.Assert;
@@ -11,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -105,11 +106,9 @@ public class ApplicationIntegrationTest {
     @Autowired
     private ControlDao controlDao;
 
-    // set server port number to 8081, just in case so that
-    // our test does not interfere with bootRun
-    static {
-        System.setProperty("server.port", "8081");
-    }
+    // autowire device dao
+    @Autowired
+    private DeviceDao deviceDao;
 
     // set up : inject webAppContext into our mockMvc and build mockMvc
     @Before
@@ -315,7 +314,15 @@ public class ApplicationIntegrationTest {
         //  { name : "control 2", value : 2 }
 
         // create JSON from new Control object
-        String controlJson = toJson(new Control("test control", 1));
+        String jsonFromControlWithDevice =
+                "{\"name\":\"control\"," +
+                "\"value\":\"1\"," +
+                "\"device\":" +
+                "\"" +
+                BASE_URL + "/devices/1" +
+                "\"" +
+                "}";
+
         // create UsernamePasswordAuthenticationToken with
         // admin user "sa":
         UserDetails admin = customUserDetailsService.loadUserByUsername("sa");
@@ -331,7 +338,7 @@ public class ApplicationIntegrationTest {
                         )
                 )
                 .contentType(contentType)
-                .content(controlJson)
+                .content(jsonFromControlWithDevice)
         ).andDo(print())
         .andExpect(status().isCreated());
         // Then lastModifiedBy User of newly created Control should be
@@ -426,7 +433,7 @@ public class ApplicationIntegrationTest {
             throws Exception {
         // Arrange
         // create JSON from new Device object without Room
-        String roomJson = toJson(new Room("room3", 1234));
+        String roomJson = toJson(new Device("device"));
         // create UsernamePasswordAuthenticationToken with
         // admin user "sa":
         UserDetails admin = customUserDetailsService.loadUserByUsername("sa");
@@ -473,6 +480,62 @@ public class ApplicationIntegrationTest {
                 .andExpect(
                         jsonPath("$.errors[0].property",
                                 equalTo("room")
+                        )
+                );
+    }
+
+    @Test
+    public void creatingControlWithoutDeviceReturnsValidationMessage()
+            throws Exception {
+        // Arrange
+        // create JSON from new Control object without Device
+        String roomJson = toJson(new Control("control", 1));
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "sa":
+        UserDetails admin = customUserDetailsService.loadUserByUsername("sa");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/devices is made with:
+        // 1. authenticated admin user
+        // 2. JSON created from new control without device
+        // Then:
+        // - status should be 400: Bad Request
+        // - json should have "error" array with size 1
+        // - error[0].entity should be Control
+        // - error[0].message should contain "without Device"
+        // - error[0].invalidValue should be "null"
+        // - error[0].property should be "device"
+        mockMvc.perform(
+                post(BASE_URL + "/controls")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(roomJson)
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(
+                        jsonPath("$.errors", hasSize(1))
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].entity", equalTo("Control"))
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].message",
+                                containsString("without Device")
+                        )
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].invalidValue",
+                                equalTo("null")
+                        )
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].property",
+                                equalTo("device")
                         )
                 );
     }
