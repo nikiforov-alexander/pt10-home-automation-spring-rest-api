@@ -109,9 +109,15 @@ public class DataLoader implements ApplicationRunner {
                 "sa",
                 "sa",
                 new String[]{"ROLE_USER", "ROLE_ADMIN"});
+        User otherAdmin = new User(
+                "Other Administrator",
+                "oa",
+                "oa",
+                new String[]{"ROLE_USER", "ROLE_ADMIN"});
         // and save them
         userDao.save(admin);
         userDao.save(johnDoe);
+        userDao.save(otherAdmin);
 
         authenticatedUserWithUserName("sa");
 
