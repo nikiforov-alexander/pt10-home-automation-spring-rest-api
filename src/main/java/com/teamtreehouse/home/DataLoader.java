@@ -55,6 +55,8 @@ public class DataLoader implements ApplicationRunner {
             Device device = new Device("device " + i);
             // add control to it
             device.addControl(control);
+            // set control.device to this new device
+            control.setDevice(device);
 
             // create new room
             Room room = new Room();
@@ -65,6 +67,9 @@ public class DataLoader implements ApplicationRunner {
 
             // add device to it
             room.addDevice(device);
+
+            // set device.room to new room
+            device.setRoom(room);
 
             // save room
             roomDao.save(room);
