@@ -81,7 +81,7 @@ public class DataLoader implements ApplicationRunner {
         // casted from "our" com.teamtreehouse...User
         UserDetails userDetails =
                 customUserDetailsService.loadUserByUsername(
-                        "sa"
+                        username
                 );
         // create new authentication token: our authentication object
         // that will be null however if we want to use it using
