@@ -420,4 +420,60 @@ public class ApplicationIntegrationTest {
                         jsonPath("$._embedded.rooms", hasSize(1))
                 );
     }
+
+    @Test
+    public void creatingDeviceWithoutRoomReturnsValidationMessage()
+            throws Exception {
+        // Arrange
+        // create JSON from new Device object without Room
+        String roomJson = toJson(new Room("room3", 1234));
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "sa":
+        UserDetails admin = customUserDetailsService.loadUserByUsername("sa");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/devices is made with:
+        // 1. authenticated admin user
+        // 2. JSON created from new device without room
+        // Then:
+        // - status should be 400: Bad Request
+        // - json should have "error" array with size 1
+        // - error[0].entity should be Device
+        // - error[0].message should contain "without Room"
+        // - error[0].invalidValue should be "null"
+        // - error[0].property should be "room"
+        mockMvc.perform(
+                post(BASE_URL + "/devices")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(roomJson)
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(
+                        jsonPath("$.errors", hasSize(1))
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].entity", equalTo("Device"))
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].message",
+                                containsString("without Room")
+                        )
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].invalidValue",
+                                equalTo("null")
+                        )
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].property",
+                                equalTo("room")
+                        )
+                );
+    }
 }
