@@ -11,12 +11,14 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -43,6 +45,9 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 // I tried to put WebIntegrationTest, because
 // I believe that What I do
 @WebIntegrationTest
+// now file in src/test/resources: test.properties
+// will separate our database from real app db
+@TestPropertySource("classpath:./test.properties")
 public class ApplicationIntegrationTest {
     // message converter used in toJson() method here, to convert
     // POJOs like Room, and etc. to JSON
