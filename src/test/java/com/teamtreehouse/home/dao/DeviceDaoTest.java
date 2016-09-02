@@ -63,8 +63,15 @@ public class DeviceDaoTest {
     public void devicesCanBeSearchedByNameContaining() throws Exception {
         // Arrange:
         setUpUserByUsername("sa");
+
+        // take first room from roomDao
+        Room room = roomDao.findOne(1L);
+        // create new device
+        Device newDevice = new Device("test");
+        // add device to room
+        newDevice.setRoom(room);
         // add test device to deviceDao with name "test"
-        deviceDao.save(new Device("test device"));
+        deviceDao.save(newDevice);
 
         // Act and Assert:
         // When we try to search by name "test"
