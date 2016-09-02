@@ -2,6 +2,7 @@ package com.teamtreehouse.home;
 
 import com.teamtreehouse.home.dao.ControlDao;
 import com.teamtreehouse.home.dao.DeviceDao;
+import com.teamtreehouse.home.dao.RoomDao;
 import com.teamtreehouse.home.model.Control;
 import com.teamtreehouse.home.model.Device;
 import com.teamtreehouse.home.model.Room;
@@ -109,6 +110,10 @@ public class ApplicationIntegrationTest {
     // autowire device dao
     @Autowired
     private DeviceDao deviceDao;
+
+    // autowire room dao
+    @Autowired
+    private RoomDao roomDao;
 
     // set up : inject webAppContext into our mockMvc and build mockMvc
     @Before
@@ -538,5 +543,43 @@ public class ApplicationIntegrationTest {
                                 equalTo("device")
                         )
                 );
+    }
+
+    @Test(expected = NestedServletException.class)
+    public void creatingDeviceWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException()
+            throws Exception {
+        // Arrange
+        // create JSON from new Device object manually
+        String jsonFromDeviceWithRoom =
+                "{\"name\":\"device\"," +
+                        "\"room\":" +
+                        "\"" +
+                        BASE_URL + "/rooms/1" +
+                        "\"" +
+                        "}";
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "jd": "ROLE_USER" and
+        // he is not in room.administrators
+        UserDetails admin =
+                customUserDetailsService.loadUserByUsername("jd");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/devices is made with:
+        // 1. authenticated admin user
+        // 2. JSON created from new device with room
+        // Then:
+        // AccessDeniedException Should be thrown
+        // but actually NestedServletException will be
+        mockMvc.perform(
+                post(BASE_URL + "/devices")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(jsonFromDeviceWithRoom)
+        )
+        .andDo(print());
     }
 }
