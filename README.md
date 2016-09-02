@@ -99,6 +99,8 @@
     ./src/test/java/com/teamtreehouse/home/ApplicationIntegrationTest.java "./src/test/java/com/teamtreehouse/home/ApplicationIntegrationTest.java"
 [DeviceDaoTest]:
     ./src/test/java/com/teamtreehouse/home/dao/DeviceDaoTest.java "./src/test/java/com/teamtreehouse/home/dao/DeviceDaoTest.java"
+[ControlDaoTest]:
+    ./src/test/java/com/teamtreehouse/home/dao/ControlDaoTest.java "./src/test/java/com/teamtreehouse/home/dao/ControlDaoTest.java"
 [RoomDaoTest]:
     ./src/test/java/com/teamtreehouse/home/dao/RoomDaoTest.java "./src/test/java/com/teamtreehouse/home/dao/RoomDaoTest.java"
     
@@ -310,40 +312,40 @@ Under construction...
     Add tests to validate all requested additional configuration
     <hr>
     [DeviceDao] tests in [DeviceDaoTest]:
-    - `devicesCanBeSearchedByNameContaining`: 
-        checks [Task 10](#task-10).
+    - `devicesCanBeSearchedByNameContaining`
+    - `devicesCanBeSavedByAdminUsers`
+    - `devicesCannotBeSavedByNonAdminNonRoomAdminUsers`
     <hr>
     [RoomDao] tests in [RoomDaoTest]:
-    - `userWithAdminRoleCanCreateRoom`: 
-        checks [Task 7](#task-7)
-    - `userWithSimpleRoleCannotCreateRoom`: 
-        checks [Task 7](#task-7)
-    - `roomsCanBeSearchedByName` 
-        checks [Task 14](#task-14)
-    - `roomsCanBeSearchedByAreaLessThan`: 
-        checks [Task 14](#task-14)
+    - `userWithAdminRoleCanCreateRoom`
+    - `userWithSimpleRoleCannotCreateRoom`
+    - `roomsCanBeSearchedByName`
+    - `roomsCanBeSearchedByAreaLessThan`
+    <hr>
+    [ControlDao] tests in [ControlDaoTest]:
+    - `controlsCannotBeSavedByNonAdminsNonRoomAdmins`
+    - `controlsCanBeSavedByAdmin`
     <hr>
     Integration tests (or functional I guess) are available
     in [ApplicationIntegrationTest] and are called:
-    - `getRequestToRoomsPageReturnsTwoRooms`:
-        simple tests basically checking that GET request to rooms
-        can be made and HATEOAS links and paging is there.
-    - `postMethodCreatingNewRoomShouldWorkWithAdminUser`:
-        test checking [Task 7](#task-7)
-    - `postMethodCreatingNewRoomShouldReturnAccessDeniedWithNormalUser`:
-        test checking [Task 7](#task-7)
-    - `postMethodCreatingNewRoomWithBigAreaShouldReturnFriendlyError`:
-        checks [Task 8](#task-8)
-    - `devicesCanBeSearchedByNameContaining`:
-        checks [Task 10](#task-10)
-    - `afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl`:
-        checks [Task 11](#task-11)
-    - `roomDetailPageShouldHaveEtagHeader`:
-        checks [Task 12](#task-12)
-    - `roomsCanBeSearchedByAreaLessThan`:
-        checks [Task 14](#task-14)
-    - `roomsCanBeSearchedByName`:
-        checks [Task 14](#task-14)
+    - *Room* tests
+        - `getRequestToRoomsPageReturnsTwoRooms`
+        - `roomDetailPageShouldHaveEtagHeader`
+        - `roomsCanBeSearchedByName`
+        - `roomsCanBeSearchedByAreaLessThan`
+        - `postMethodCreatingNewRoomShouldWorkWithAdminUser`
+        - `postMethodCreatingNewRoomShouldReturnAccessDeniedWithNormalUser`
+        - `postMethodCreatingNewRoomWithBigAreaShouldReturnFriendlyError`
+    - *Device* tests
+        - `devicesCanBeSearchedByNameContaining`
+        - `postMethodCreatingNewDeviceShouldWorkWithAdminUser`
+        - `creatingDeviceWithoutRoomReturnsValidationMessage`
+        - `creatingDeviceWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
+    - *Control* tests
+        - `postMethodCreatingNewControlShouldWorkWithAdminUser`
+        - `creatingControlWithoutDeviceReturnsValidationMessage`
+        - `afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl`
+        - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
 <hr>
 14. <a id="task-14"><a/>
     Add additional searches to find rooms by name and 
@@ -387,5 +389,4 @@ Under construction...
     - `creatingDeviceWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
     - `postMethodCreatingNewControlShouldWorkWithAdminUser`
     - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
-    <hr>
 <hr>
