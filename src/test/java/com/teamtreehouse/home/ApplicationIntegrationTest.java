@@ -598,4 +598,43 @@ public class ApplicationIntegrationTest {
                 equalTo(controlDao.findOne(3L).getLastModifiedBy())
         );
     }
+
+    @Test(expected = NestedServletException.class)
+    public void creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException()
+            throws Exception {
+        // Arrange
+        // create JSON from new Control object manually
+        String jsonFromControlWithDevice =
+                "{" +
+                        "\"name\":\"control\"," +
+                        "\"value\":\"1\"," +
+                        "\"device\":" +
+                        "\"" +
+                        BASE_URL + "/devices/1" +
+                        "\"" +
+                "}";
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "jd": "ROLE_USER" and
+        // he is not in room.administrators
+        UserDetails admin =
+                customUserDetailsService.loadUserByUsername("jd");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/controls is made with:
+        // 1. authenticated admin user
+        // 2. JSON created from new control with device
+        // Then:
+        // AccessDeniedException Should be thrown
+        // but actually NestedServletException will be
+        mockMvc.perform(
+                post(BASE_URL + "/controls")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(jsonFromControlWithDevice)
+        ).andDo(print());
+    }
 }
