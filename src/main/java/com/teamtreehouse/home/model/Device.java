@@ -20,7 +20,9 @@ public class Device extends BaseEntity{
     private List<Control> controls;
 
     // many devices will be in one room
+    // device cannot be created without room
     @ManyToOne
+    @NotNull(message = "Device cannot be created without Room")
     private Room room;
 
     //

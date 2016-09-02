@@ -1,7 +1,10 @@
 package com.teamtreehouse.home;
 
 import com.teamtreehouse.home.dao.ControlDao;
+import com.teamtreehouse.home.dao.DeviceDao;
+import com.teamtreehouse.home.dao.RoomDao;
 import com.teamtreehouse.home.model.Control;
+import com.teamtreehouse.home.model.Device;
 import com.teamtreehouse.home.model.Room;
 import com.teamtreehouse.home.service.CustomUserDetailsService;
 import org.junit.Assert;
@@ -17,6 +20,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -43,6 +47,9 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 // I tried to put WebIntegrationTest, because
 // I believe that What I do
 @WebIntegrationTest
+// now file in src/test/resources: test.properties
+// will separate our database from real app db
+@TestPropertySource("classpath:./test-ApplicationIntegrationTest.properties")
 public class ApplicationIntegrationTest {
     // message converter used in toJson() method here, to convert
     // POJOs like Room, and etc. to JSON
@@ -77,7 +84,7 @@ public class ApplicationIntegrationTest {
     private MockMvc mockMvc;
 
     // server, base path, and base url setting
-    private final int SERVER_PORT = 8080;
+    private final int SERVER_PORT = 8081;
     private final String SPRING_DATA_REST_BASEPATH = "/api/v1";
     private final String BASE_URL =
             "http://localhost:"
@@ -100,11 +107,13 @@ public class ApplicationIntegrationTest {
     @Autowired
     private ControlDao controlDao;
 
-    // set server port number to 8081, just in case so that
-    // our test does not interfere with bootRun
-    static {
-        System.setProperty("server.port", "8081");
-    }
+    // autowire device dao
+    @Autowired
+    private DeviceDao deviceDao;
+
+    // autowire room dao
+    @Autowired
+    private RoomDao roomDao;
 
     // set up : inject webAppContext into our mockMvc and build mockMvc
     @Before
@@ -124,6 +133,10 @@ public class ApplicationIntegrationTest {
         );
         return message.getBodyAsString();
     }
+
+    //
+    // Rooms
+    //
 
     // My first integration tests: it can be disregarded it basically
     // checks that .../rooms page is OK with links and HATEOAS
@@ -157,6 +170,88 @@ public class ApplicationIntegrationTest {
                 );
     }
 
+    @Test
+    public void roomDetailPageShouldHaveEtagHeader()
+            throws Exception {
+        // Arrange: mockMvc is arranged to perform requests
+        // There are two rooms loaded
+        //  { name : "room 1", area : 1 }
+        //  { name : "room 2", area : 2 }
+
+        // Act and Assert:
+        // When GET request to room details page is made
+        // Then:
+        // - status should be OK
+        // - response should have header "Etag" with some
+        //   value
+        mockMvc.perform(
+                get(BASE_URL + "/rooms/1")
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(
+                        header().string("Etag", anything())
+                );
+    }
+
+    @Test
+    public void roomsCanBeSearchedByName() throws Exception {
+        // Arrange: mockMvc is arranged: all requests are allowed
+        // There are two rooms
+        //  { name : "room 1", area : 1 }
+        //  { name : "room 2", area : 2 }
+
+        // Act and Assert:
+        // When GET request is made to:
+        // BASE_URL/devices/search/has-name?name=room+1
+        // or BASE_URL/devices/search/has-name?name=room%201
+        // Then:
+        // - status should be OK
+        // - json should have "_embedded.rooms" array with size 1
+        //   which means one result test room w name "room 1"
+        //   and with area "1"
+        mockMvc.perform(
+                // here i use space between "room 1" because encoding is done
+                // automatically
+                get(BASE_URL + "/rooms/search/" +
+                        "has-name?name=room 1" )
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(
+                        jsonPath("$._embedded.rooms", hasSize(1))
+                );
+    }
+    @Test
+    public void roomsCanBeSearchedByAreaLessThan() throws Exception {
+        // Arrange: mockMvc is arranged: all requests are allowed
+        // There are two rooms
+        //  { name : "room 1", area : 1 }
+        //  { name : "room 2", area : 2 }
+
+        // Act and Assert:
+        // When GET request is made to:
+        // BASE_URL/devices/search/has-area-less-than?&area=2
+        // or BASE_URL/devices/search/has-area-less-than?&area=2
+        // Then:
+        // - status should be OK
+        // - json should have "_embedded.rooms" array with size 1
+        //   which means one result test room w name "room 1"
+        //   and with area "1"
+        mockMvc.perform(
+                get(BASE_URL + "/rooms/search/" +
+                        "has-area-less-than?area=2" )
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(
+                        jsonPath("$._embedded.rooms", hasSize(1))
+                );
+    }
+
+    //
+    // Room post methods
+    //
     @Test
     public void postMethodCreatingNewRoomShouldWorkWithAdminUser()
             throws Exception {
@@ -279,6 +374,10 @@ public class ApplicationIntegrationTest {
                 );
     }
 
+    //
+    // Devices tests
+    //
+
     @Test
     public void devicesCanBeSearchedByNameContaining() throws Exception {
         // Arrange: mockMvc is arranged: all requests are allowed
@@ -301,6 +400,238 @@ public class ApplicationIntegrationTest {
         );
     }
 
+
+    @Test
+    public void postMethodCreatingNewDeviceShouldWorkWithAdminUser()
+            throws Exception {
+        // Arrange
+        // create JSON from new Device object manually
+        String jsonFromDeviceWithRoom =
+                "{\"name\":\"device\"," +
+                        "\"room\":" +
+                        "\"" +
+                        BASE_URL + "/rooms/1" +
+                        "\"" +
+                        "}";
+
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "sa":
+        UserDetails admin =
+                customUserDetailsService.loadUserByUsername("sa");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/devices is made with:
+        // 1. authenticated admin user
+        // 2. JSON created from new device attached to first room
+        // Then:
+        // - status should be 201 Created
+        mockMvc.perform(
+                post(BASE_URL + "/devices")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(jsonFromDeviceWithRoom)
+        )
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void creatingDeviceWithoutRoomReturnsValidationMessage()
+            throws Exception {
+        // Arrange
+        // create JSON from new Device object without Room
+        String roomJson = toJson(new Device("device"));
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "sa":
+        UserDetails admin = customUserDetailsService.loadUserByUsername("sa");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/devices is made with:
+        // 1. authenticated admin user
+        // 2. JSON created from new device without room
+        // Then:
+        // - status should be 400: Bad Request
+        // - json should have "error" array with size 1
+        // - error[0].entity should be Device
+        // - error[0].message should contain "without Room"
+        // - error[0].invalidValue should be "null"
+        // - error[0].property should be "room"
+        mockMvc.perform(
+                post(BASE_URL + "/devices")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(roomJson)
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(
+                        jsonPath("$.errors", hasSize(1))
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].entity", equalTo("Device"))
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].message",
+                                containsString("without Room")
+                        )
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].invalidValue",
+                                equalTo("null")
+                        )
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].property",
+                                equalTo("room")
+                        )
+                );
+    }
+
+
+    @Test(expected = NestedServletException.class)
+    public void creatingDeviceWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException()
+            throws Exception {
+        // Arrange
+        // create JSON from new Device object manually
+        String jsonFromDeviceWithRoom =
+                "{\"name\":\"device\"," +
+                        "\"room\":" +
+                        "\"" +
+                        BASE_URL + "/rooms/1" +
+                        "\"" +
+                        "}";
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "jd": "ROLE_USER" and
+        // he is not in room.administrators
+        UserDetails admin =
+                customUserDetailsService.loadUserByUsername("jd");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/devices is made with:
+        // 1. authenticated admin user
+        // 2. JSON created from new device with room
+        // Then:
+        // AccessDeniedException Should be thrown
+        // but actually NestedServletException will be
+        mockMvc.perform(
+                post(BASE_URL + "/devices")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(jsonFromDeviceWithRoom)
+        )
+        .andDo(print());
+    }
+
+    // Control tests
+
+    @Test
+    public void postMethodCreatingNewControlShouldWorkWithAdminUser()
+            throws Exception {
+        // Arrange
+        // create JSON from new Control object manually
+        String jsonFromDeviceWithRoom =
+                "{" +
+                        "\"name\":\"control\"," +
+                        "\"value\":\"1\"," +
+                        "\"device\":" +
+                        "\"" +
+                        BASE_URL + "/devices/1" +
+                        "\"" +
+                        "}";
+
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "sa":
+        UserDetails admin =
+                customUserDetailsService.loadUserByUsername("sa");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/controls is made with:
+        // 1. authenticated admin user
+        // 2. JSON created from new control attached to first device
+        // Then:
+        // - status should be 201 Created
+        mockMvc.perform(
+                post(BASE_URL + "/controls")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(jsonFromDeviceWithRoom)
+        )
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void creatingControlWithoutDeviceReturnsValidationMessage()
+            throws Exception {
+        // Arrange
+        // create JSON from new Control object without Device
+        String roomJson = toJson(new Control("control", 1));
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "sa":
+        UserDetails admin = customUserDetailsService.loadUserByUsername("sa");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/devices is made with:
+        // 1. authenticated admin user
+        // 2. JSON created from new control without device
+        // Then:
+        // - status should be 400: Bad Request
+        // - json should have "error" array with size 1
+        // - error[0].entity should be Control
+        // - error[0].message should contain "without Device"
+        // - error[0].invalidValue should be "null"
+        // - error[0].property should be "device"
+        mockMvc.perform(
+                post(BASE_URL + "/controls")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(roomJson)
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(
+                        jsonPath("$.errors", hasSize(1))
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].entity", equalTo("Control"))
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].message",
+                                containsString("without Device")
+                        )
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].invalidValue",
+                                equalTo("null")
+                        )
+                )
+                .andExpect(
+                        jsonPath("$.errors[0].property",
+                                equalTo("device")
+                        )
+                );
+    }
+
     @Test
     public void afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl()
             throws Exception {
@@ -310,7 +641,15 @@ public class ApplicationIntegrationTest {
         //  { name : "control 2", value : 2 }
 
         // create JSON from new Control object
-        String controlJson = toJson(new Control("test control", 1));
+        String jsonFromControlWithDevice =
+                "{\"name\":\"control\"," +
+                        "\"value\":\"1\"," +
+                        "\"device\":" +
+                        "\"" +
+                        BASE_URL + "/devices/1" +
+                        "\"" +
+                        "}";
+
         // create UsernamePasswordAuthenticationToken with
         // admin user "sa":
         UserDetails admin = customUserDetailsService.loadUserByUsername("sa");
@@ -320,15 +659,15 @@ public class ApplicationIntegrationTest {
         // Then status should be 201 created
         mockMvc.perform(
                 post(BASE_URL + "/controls")
-                .with(
-                        SecurityMockMvcRequestPostProcessors.user(
-                                admin
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
                         )
-                )
-                .contentType(contentType)
-                .content(controlJson)
+                        .contentType(contentType)
+                        .content(jsonFromControlWithDevice)
         ).andDo(print())
-        .andExpect(status().isCreated());
+                .andExpect(status().isCreated());
         // Then lastModifiedBy User of newly created Control should be
         // admin user
         assertThat(
@@ -337,82 +676,42 @@ public class ApplicationIntegrationTest {
         );
     }
 
-    @Test
-    public void roomDetailPageShouldHaveEtagHeader()
+    @Test(expected = NestedServletException.class)
+    public void creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException()
             throws Exception {
-        // Arrange: mockMvc is arranged to perform requests
-        // There are two rooms loaded
-        //  { name : "room 1", area : 1 }
-        //  { name : "room 2", area : 2 }
+        // Arrange
+        // create JSON from new Control object manually
+        String jsonFromControlWithDevice =
+                "{" +
+                        "\"name\":\"control\"," +
+                        "\"value\":\"1\"," +
+                        "\"device\":" +
+                        "\"" +
+                        BASE_URL + "/devices/1" +
+                        "\"" +
+                "}";
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "jd": "ROLE_USER" and
+        // he is not in room.administrators
+        UserDetails admin =
+                customUserDetailsService.loadUserByUsername("jd");
 
         // Act and Assert:
-        // When GET request to room details page is made
+        // When POST request to BASE_URL/controls is made with:
+        // 1. authenticated admin user
+        // 2. JSON created from new control with device
         // Then:
-        // - status should be OK
-        // - response should have header "Etag" with some
-        //   value
+        // AccessDeniedException Should be thrown
+        // but actually NestedServletException will be
         mockMvc.perform(
-                get(BASE_URL + "/rooms/1")
-        )
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(
-                header().string("Etag", anything())
-        );
-    }
-
-    @Test
-    public void roomsCanBeSearchedByName() throws Exception {
-        // Arrange: mockMvc is arranged: all requests are allowed
-        // There are two rooms
-        //  { name : "room 1", area : 1 }
-        //  { name : "room 2", area : 2 }
-
-        // Act and Assert:
-        // When GET request is made to:
-        // BASE_URL/devices/search/has-name?name=room+1
-        // or BASE_URL/devices/search/has-name?name=room%201
-        // Then:
-        // - status should be OK
-        // - json should have "_embedded.rooms" array with size 1
-        //   which means one result test room w name "room 1"
-        //   and with area "1"
-        mockMvc.perform(
-                // here i use space between "room 1" because encoding is done
-                // automatically
-                get(BASE_URL + "/rooms/search/" +
-                        "has-name?name=room 1" )
-        )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(
-                        jsonPath("$._embedded.rooms", hasSize(1))
-                );
-    }
-    @Test
-    public void roomsCanBeSearchedByAreaLessThan() throws Exception {
-        // Arrange: mockMvc is arranged: all requests are allowed
-        // There are two rooms
-        //  { name : "room 1", area : 1 }
-        //  { name : "room 2", area : 2 }
-
-        // Act and Assert:
-        // When GET request is made to:
-        // BASE_URL/devices/search/has-area-less-than?&area=2
-        // or BASE_URL/devices/search/has-area-less-than?&area=2
-        // Then:
-        // - status should be OK
-        // - json should have "_embedded.rooms" array with size 1
-        //   which means one result test room w name "room 1"
-        //   and with area "1"
-        mockMvc.perform(
-                get(BASE_URL + "/rooms/search/" +
-                        "has-area-less-than?area=2" )
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(
-                        jsonPath("$._embedded.rooms", hasSize(1))
-                );
+                post(BASE_URL + "/controls")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(jsonFromControlWithDevice)
+        ).andDo(print());
     }
 }

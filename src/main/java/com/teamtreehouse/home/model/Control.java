@@ -13,10 +13,12 @@ public class Control extends BaseEntity{
     private String name;
     // value of control: can be temperature value or 0/1 values for
     // switch
+    @NotNull
     private Integer value;
 
     // Many controls have one device
     @ManyToOne
+    @NotNull(message = "Control cannot be created without Device")
     private Device device;
 
     // Many controls can be last modified by One User

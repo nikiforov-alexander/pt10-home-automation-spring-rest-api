@@ -55,6 +55,8 @@ public class DataLoader implements ApplicationRunner {
             Device device = new Device("device " + i);
             // add control to it
             device.addControl(control);
+            // set control.device to this new device
+            control.setDevice(device);
 
             // create new room
             Room room = new Room();
@@ -65,6 +67,9 @@ public class DataLoader implements ApplicationRunner {
 
             // add device to it
             room.addDevice(device);
+
+            // set device.room to new room
+            device.setRoom(room);
 
             // save room
             roomDao.save(room);
@@ -81,7 +86,7 @@ public class DataLoader implements ApplicationRunner {
         // casted from "our" com.teamtreehouse...User
         UserDetails userDetails =
                 customUserDetailsService.loadUserByUsername(
-                        "sa"
+                        username
                 );
         // create new authentication token: our authentication object
         // that will be null however if we want to use it using
@@ -109,9 +114,15 @@ public class DataLoader implements ApplicationRunner {
                 "sa",
                 "sa",
                 new String[]{"ROLE_USER", "ROLE_ADMIN"});
+        User otherAdmin = new User(
+                "Other Administrator",
+                "oa",
+                "oa",
+                new String[]{"ROLE_USER", "ROLE_ADMIN"});
         // and save them
         userDao.save(admin);
         userDao.save(johnDoe);
+        userDao.save(otherAdmin);
 
         authenticatedUserWithUserName("sa");
 

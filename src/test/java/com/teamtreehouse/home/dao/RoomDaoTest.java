@@ -14,6 +14,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.hamcrest.Matchers.is;
@@ -25,6 +26,8 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
 @WebIntegrationTest
+// user test.properties with in memory testing db
+@TestPropertySource("classpath:/test-RoomDaoTest.properties")
 public class RoomDaoTest {
     // autowire roomDao
     @Autowired
@@ -33,12 +36,6 @@ public class RoomDaoTest {
     // autowire userDetailsService to load user
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
-
-    // setting port number to 8081, so that we
-    // do not interfere with real bootRun
-    static {
-        System.setProperty("server.port", "8081");
-    }
 
     // login user depending on username
     // can be "sa" with ROLE_USER, ROLE_ADMIN
