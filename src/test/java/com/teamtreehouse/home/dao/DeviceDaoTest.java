@@ -88,8 +88,33 @@ public class DeviceDaoTest {
         );
     }
 
+    @Test
+    public void devicesCanBeSavedByAdminUsers()
+            throws Exception {
+        // Arrange:
+        // login user "sa" with "ROLE_ADMIN"
+        setUpUserByUsername("sa");
+
+        // take first room from roomDao
+        Room room = roomDao.findOne(1L);
+        // create new device
+        Device newDevice = new Device("device-to-be-saved-by-admin");
+        // add device to room
+        newDevice.setRoom(room);
+
+        // Act, and Assert:
+        // When we try to save new Device with room
+        Device savedDevice = deviceDao.save(newDevice);
+
+        // Then savedDevice should not be null
+        assertThat(
+                savedDevice,
+                notNullValue(Device.class)
+        );
+    }
+
     @Test(expected = AccessDeniedException.class)
-    public void devicesCanBeSavedOnlyByRoomAdministrators()
+    public void devicesCannotBeSavedByNonAdminNonRoomAdminUsers()
             throws Exception {
         // Arrange:
         // login user "jd" non-admin non-room-administrator
