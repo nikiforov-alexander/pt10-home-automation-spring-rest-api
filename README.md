@@ -68,6 +68,10 @@
     Add additional searches to find rooms by name and 
     by less than a specified area
     <hr>
+* [15.] (#task-15)
+    Ensure that only Room Administrators can 
+    add and modify Devices and Controls.
+    <hr>
     
 
 <!--Links-->
@@ -356,4 +360,32 @@ Under construction...
     - `roomsCanBeSearchedByAreaLessThan` in [RoomDaoTest]
     - `roomsCanBeSearchedByAreaLessThan` in [ApplicationIntegrationTest]
     - `roomsCanBeSearchedByName` in [ApplicationIntegrationTest]
+<hr>
+15. <a id="task-15"><a/>
+    Ensure that only Room Administrators can 
+    add and modify Devices and Controls.
+    <hr>
+    Method `save` in [DeviceDao] is `@Override`-n with Spring
+    Security `@PreAuthorize` annotation so that only
+    user with "ROLE_ADMIN" and `device.room.adminstrators` 
+    can save Device.
+    <hr>
+    Analogously, method `save` in [ControlDao] is `@Override`-n
+    with @PreAuthorize so that only user with "ROLE_ADMIN" and
+    `control.device.room.administrators` can save Control.
+    <hr>
+    Tests checking this in [DeviceDaoTest] are:
+    - `devicesCanBeSavedByAdminUsers`
+    - `devicesCannotBeSavedByNonAdminNonRoomAdminUsers`
+    <hr>
+    Tests checking this in [ControlDaoTest] are:
+    - `controlsCanBeSavedByAdmin`
+    - `controlsCannotBeSavedByNonAdminsNonRoomAdmins`
+    <hr>
+    Test checking this in [ApplicationIntegrationTest] are:
+    - `postMethodCreatingNewDeviceShouldWorkWithAdminUser`
+    - `creatingDeviceWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
+    - `postMethodCreatingNewControlShouldWorkWithAdminUser`
+    - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
+    <hr>
 <hr>
