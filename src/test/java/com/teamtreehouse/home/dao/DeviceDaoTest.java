@@ -27,7 +27,7 @@ import static org.hamcrest.Matchers.*;
 @SpringApplicationConfiguration(Application.class)
 @WebIntegrationTest
 // user test.properties with in memory testing db
-@TestPropertySource("classpath:/test.properties")
+@TestPropertySource("classpath:/test-DeviceDaoTest.properties")
 public class DeviceDaoTest {
     // autowire user Dao
     @Autowired

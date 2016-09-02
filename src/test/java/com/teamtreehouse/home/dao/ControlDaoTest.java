@@ -25,7 +25,7 @@ import static org.junit.Assert.assertThat;
 @SpringApplicationConfiguration(Application.class)
 @WebIntegrationTest
 // user test.properties with in memory testing db
-@TestPropertySource("classpath:/test.properties")
+@TestPropertySource("classpath:/test-ControlDaoTest.properties")
 public class ControlDaoTest {
 
     // autowire user Dao

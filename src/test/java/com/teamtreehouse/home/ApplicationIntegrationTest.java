@@ -49,7 +49,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @WebIntegrationTest
 // now file in src/test/resources: test.properties
 // will separate our database from real app db
-@TestPropertySource("classpath:./test.properties")
+@TestPropertySource("classpath:./test-ApplicationIntegrationTest.properties")
 public class ApplicationIntegrationTest {
     // message converter used in toJson() method here, to convert
     // POJOs like Room, and etc. to JSON
