@@ -537,6 +537,46 @@ public class ApplicationIntegrationTest {
     // Control tests
 
     @Test
+    public void postMethodCreatingNewControlShouldWorkWithAdminUser()
+            throws Exception {
+        // Arrange
+        // create JSON from new Control object manually
+        String jsonFromDeviceWithRoom =
+                "{" +
+                        "\"name\":\"control\"," +
+                        "\"value\":\"1\"," +
+                        "\"device\":" +
+                        "\"" +
+                        BASE_URL + "/devices/1" +
+                        "\"" +
+                        "}";
+
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "sa":
+        UserDetails admin =
+                customUserDetailsService.loadUserByUsername("sa");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/controls is made with:
+        // 1. authenticated admin user
+        // 2. JSON created from new control attached to first device
+        // Then:
+        // - status should be 201 Created
+        mockMvc.perform(
+                post(BASE_URL + "/controls")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(jsonFromDeviceWithRoom)
+        )
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     public void creatingControlWithoutDeviceReturnsValidationMessage()
             throws Exception {
         // Arrange
