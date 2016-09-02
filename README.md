@@ -79,8 +79,6 @@
 <!--External Links-->
 
 <!--Properties files-->
-[initial_project_files]:
-    initial-project-files "directory with initial project files from Treeshouse"
 [build.gradle]:
     ./build.gradle "Gradle configuration file: build.gradle"
 [application.properties]:
@@ -390,3 +388,44 @@ Under construction...
     - `postMethodCreatingNewControlShouldWorkWithAdminUser`
     - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
 <hr>
+
+
+
+### Links <a id="links"></a>
+
+### Properties files
+- [build.gradle]
+- [application.properties]
+- [rest-messages.properties]
+
+### Java Classes
+
+#### Tests
+- [ApplicationIntegrationTest]
+- [DeviceDaoTest]
+- [ControlDaoTest]
+- [RoomDaoTest]
+
+
+#### Model/Domain
+- [BaseEntity]
+- [Device]
+- [Control]
+- [User]
+- [Room]
+
+#### DAO
+- [ControlDao]
+- [DeviceDao]
+- [UserDao]
+- [RoomDao]
+
+#### Configuration
+- [RestConfig]
+
+#### Misc
+- [CustomUserDetailsService]
+- [ControlEventHandler]
+- [Application]
+- [DataLoader]
+
