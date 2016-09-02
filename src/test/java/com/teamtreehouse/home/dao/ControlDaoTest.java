@@ -3,7 +3,6 @@ package com.teamtreehouse.home.dao;
 import com.teamtreehouse.home.Application;
 import com.teamtreehouse.home.model.Control;
 import com.teamtreehouse.home.model.Device;
-import com.teamtreehouse.home.model.Room;
 import com.teamtreehouse.home.service.CustomUserDetailsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 // run integration test because that is the only way
 // to test Spring Data Reps
@@ -76,5 +76,30 @@ public class ControlDaoTest {
         // When we try to save new Control with Device
         // Then AccessDeniedException should be thrown
         controlDao.save(newControl);
+    }
+
+    @Test
+    public void controlsCanBeSavedByAdmin()
+            throws Exception {
+        // Arrange:
+        // login user "sa" : user with "ROLE_ADMIN"
+        setUpUserByUsername("sa");
+
+        // take first room from roomDao
+        Device device = deviceDao.findOne(1L);
+        // create new control
+        Control newControl = new Control("control", 1);
+        // set control.device to first device
+        newControl.setDevice(device);
+
+        // Act and Assert:
+        // When we try to save new Control with Device
+        Control savedControl = controlDao.save(newControl);
+
+        // Then savedControl returned by dao should not be null
+        assertThat(
+                savedControl,
+                notNullValue(Control.class)
+        );
     }
 }
