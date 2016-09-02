@@ -10,6 +10,8 @@
 
 ### Misc
 - [Quick Links to files and directories] (#links)
+- [Notes about project] (#notes)
+
 
 <hr>
 
@@ -137,7 +139,10 @@
 
 ### Eclipse Installation instructions
 <hr> <a id="eclipse"></a>
-Under construction...
+For the first time I decided not to export project to 
+Eclipse, because it seems that `apply plugin: 'eclipse'` 
+in [build.gradle] is enough for Gradle to generate
+all necessary files. I tried and it worked like Charm.
 
 
 
@@ -389,6 +394,23 @@ Under construction...
     - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
 <hr>
 
+### Notes about project <a id="notes"></a>
+- `bootRun` gradle task is used to run the App.
+- [DataLoader] class loads in system: 
+    - "jd" user with "ROLE_USER", and password "123"
+    - "sa" user with "ROLE_ADMIN", password: "sa"
+    - two rooms with two devices each created by
+      "sa" user, making "sa" user 
+      as one of the `room.administrators`
+    - two devices with two controls each created by "sa"
+    - `control.lastModifiedBy` user is also "sa"
+- [DataLoader] class is used for easier check of 
+  functionality, and it is also used in all tests,
+  but the difference is that in each test I had
+  to create different in-memory database that is
+  `drop-create`-d every time tests run. Actual `bootRun`
+  is attached to [home.mv.db] database in [data]
+  directory, so that tests and real App are separated
 
 
 ### Links <a id="links"></a>
