@@ -278,12 +278,13 @@ all necessary files. I tried and it worked like Charm.
     <hr>
     In [DeviceDao] `findByNameContaining` Spring Query method is
     defined. The implementation will be provided by Spring Data.
-    <br>
+    <hr>
     `@RestResource(rel = "name", path = "contains-name")`
     annotation is added to make the following query 
     available in browser:
-    `BASE_URL/devices/search/contains-name?name=query`
-    Where BASE_URL can be `localhost:8080/api/v1`, and
+    - `BASE_URL/devices/search/contains-name?name=query`
+    <hr>
+    BASE_URL can be `http://localhost:8080/api/v1`, and
     "query" can be device name that we are looking for.
     <hr>
     This query is tested in `devicesCanBeSearchedByNameContaining()`
@@ -408,7 +409,7 @@ all necessary files. I tried and it worked like Charm.
         - `postMethodCreatingNewDeviceShouldWorkWithAdminUser`
         - `creatingDeviceWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
         - `postMethodCreatingNewDeviceShouldWorkWithRoomAdminUser`
-    - Room test:
+    - Control tests:
         - `postMethodCreatingNewControlShouldWorkWithRoomAdminUser`
         - `postMethodCreatingNewControlShouldWorkWithAdminUser`
         - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
@@ -418,7 +419,10 @@ all necessary files. I tried and it worked like Charm.
 - `bootRun` gradle task is used to run the App.
 - [DataLoader] class loads in system: 
     - "jd" user with "ROLE_USER", and password "jd"
-    - "sa" user with "ROLE_ADMIN", password: "sa"
+    - "sa" "System Administrator" user with "ROLE_ADMIN", password: "sa"
+    - "ra" "Room Administrator" user with "ROLE_USER", password: "ra", 
+    but for both rooms loaded with DataLoader he will be in 
+    `room.administrators`
     - two rooms with two devices each created by
       "sa" user, but manually made "ra" user 
       as one of the `room.administrators`
