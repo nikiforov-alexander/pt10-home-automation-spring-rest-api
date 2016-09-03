@@ -89,6 +89,10 @@
     ./src/main/resources/rest-messages.properties "File w REST messages, describing our API ./src/main/resources/rest-messages.properties"
 
 <!--Misc-->
+[data]:
+    ./data "data directory with home.mv.db database ./data"
+[home.mv.db]:
+    ./data/home.mv.db "embedded H2 database used when bootRun task starts ./data/home.mv.db"
 <!--
     [model_classes_relationship_diagram.png]:
     ./misc/model_classes_relationship_diagram.png "./misc/model_classes_relationship_diagram.png"
@@ -397,13 +401,13 @@ all necessary files. I tried and it worked like Charm.
 ### Notes about project <a id="notes"></a>
 - `bootRun` gradle task is used to run the App.
 - [DataLoader] class loads in system: 
-    - "jd" user with "ROLE_USER", and password "123"
+    - "jd" user with "ROLE_USER", and password "jd"
     - "sa" user with "ROLE_ADMIN", password: "sa"
     - two rooms with two devices each created by
-      "sa" user, making "sa" user 
+      "sa" user, but manually made "ra" user 
       as one of the `room.administrators`
     - two devices with two controls each created by "sa"
-    - `control.lastModifiedBy` user is also "sa"
+    - `control.lastModifiedBy` user is set manually to "ra"
 - [DataLoader] class is used for easier check of 
   functionality, and it is also used in all tests,
   but the difference is that in each test I had
