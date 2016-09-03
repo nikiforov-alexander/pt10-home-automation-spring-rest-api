@@ -1,5 +1,6 @@
 package com.teamtreehouse.home;
 
+import com.google.common.collect.Iterables;
 import com.teamtreehouse.home.dao.ControlDao;
 import com.teamtreehouse.home.dao.DeviceDao;
 import com.teamtreehouse.home.dao.RoomDao;
@@ -668,11 +669,17 @@ public class ApplicationIntegrationTest {
                         .content(jsonFromControlWithDevice)
         ).andDo(print())
                 .andExpect(status().isCreated());
+        // get index of newly added control
+        Long indexOfNewlyAddedControl =
+                (long) Iterables.size(controlDao.findAll());
         // Then lastModifiedBy User of newly created Control should be
         // admin user
         assertThat(
                 admin,
-                equalTo(controlDao.findOne(3L).getLastModifiedBy())
+                equalTo(
+                        controlDao.findOne(indexOfNewlyAddedControl)
+                                .getLastModifiedBy()
+                )
         );
     }
 
@@ -693,7 +700,7 @@ public class ApplicationIntegrationTest {
         // create UsernamePasswordAuthenticationToken with
         // admin user "jd": "ROLE_USER" and
         // he is not in room.administrators
-        UserDetails admin =
+        UserDetails user =
                 customUserDetailsService.loadUserByUsername("jd");
 
         // Act and Assert:
@@ -707,7 +714,7 @@ public class ApplicationIntegrationTest {
                 post(BASE_URL + "/controls")
                         .with(
                                 SecurityMockMvcRequestPostProcessors.user(
-                                        admin
+                                        user
                                 )
                         )
                         .contentType(contentType)
