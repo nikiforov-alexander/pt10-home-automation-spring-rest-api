@@ -48,7 +48,8 @@ public class DeviceDaoTest {
     // login user depending on username
     // can be "sa" with ROLE_USER, ROLE_ADMIN
     // or "jd" with ROLE_USER
-    // or "oa" with ROLE_USER, ROLE_ADMIN but not room admin
+    // or "ra" with ROLE_USER, but is room.administrators for
+    // room 1 and 2
     private void setUpUserByUsername(String username) {
         UserDetails user =
                 customUserDetailsService.loadUserByUsername(username);
@@ -99,6 +100,32 @@ public class DeviceDaoTest {
         Room room = roomDao.findOne(1L);
         // create new device
         Device newDevice = new Device("device-to-be-saved-by-admin");
+        // add device to room
+        newDevice.setRoom(room);
+
+        // Act, and Assert:
+        // When we try to save new Device with room
+        Device savedDevice = deviceDao.save(newDevice);
+
+        // Then savedDevice should not be null
+        assertThat(
+                savedDevice,
+                notNullValue(Device.class)
+        );
+    }
+
+    @Test
+    public void devicesCanBeSavedByRoomAdminUsers()
+            throws Exception {
+        // Arrange:
+        // login user "sa" with "ROLE_USER", but he is
+        // in room.administrators for room 1,2
+        setUpUserByUsername("ra");
+
+        // take first room from roomDao
+        Room room = roomDao.findOne(1L);
+        // create new device
+        Device newDevice = new Device("device-to-be-saved-by-room-admin");
         // add device to room
         newDevice.setRoom(room);
 
