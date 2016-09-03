@@ -441,6 +441,44 @@ public class ApplicationIntegrationTest {
     }
 
     @Test
+    public void postMethodCreatingNewDeviceShouldWorkWithRoomAdminUser()
+            throws Exception {
+        // Arrange
+        // create JSON from new Device object manually
+        String jsonFromDeviceWithRoom =
+                "{\"name\":\"device\"," +
+                        "\"room\":" +
+                        "\"" +
+                        BASE_URL + "/rooms/1" +
+                        "\"" +
+                        "}";
+
+        // create UsernamePasswordAuthenticationToken with
+        // room admin user "ra":
+        UserDetails roomAdminUser =
+                customUserDetailsService.loadUserByUsername("ra");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/devices is made with:
+        // 1. authenticated room admin user
+        // 2. JSON created from new device attached to first room
+        // Then:
+        // - status should be 201 Created
+        mockMvc.perform(
+                post(BASE_URL + "/devices")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        roomAdminUser
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(jsonFromDeviceWithRoom)
+        )
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     public void creatingDeviceWithoutRoomReturnsValidationMessage()
             throws Exception {
         // Arrange
