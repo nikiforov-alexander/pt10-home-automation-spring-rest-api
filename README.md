@@ -303,9 +303,9 @@ all necessary files. I tried and it worked like Charm.
     Currently `Control.lastModifiedBy` is in @ManyToOne 
     relationship with [User]. Hope its right.
     <hr>
-    Test checking this is method called:
-    `afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl()`
-    in [ApplicationIntegrationTest].    
+    Test methods checking are in [ApplicationIntegrationTest]:    
+    - `afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl`
+    - `afterEditingLoggedOnUserIsSetToLastModifiedByFieldInControl`
 <hr>
 12. <a id="task-12"><a/>
     Ensure that control modifications are versioned 
@@ -364,6 +364,7 @@ all necessary files. I tried and it worked like Charm.
         - `afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl`
         - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
         - `postMethodCreatingNewControlShouldWorkWithRoomAdminUser`
+        - `afterEditingLoggedOnUserIsSetToLastModifiedByFieldInControl`
 <hr>
 14. <a id="task-14"><a/>
     Add additional searches to find rooms by name and 
