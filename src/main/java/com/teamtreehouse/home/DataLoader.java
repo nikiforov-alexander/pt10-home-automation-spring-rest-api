@@ -41,29 +41,78 @@ public class DataLoader implements ApplicationRunner {
         this.customUserDetailsService = customUserDetailsService;
     }
 
-    private void createCoupleOfTestRoomsWithDevicesAndControls(
-            User user
-    ) {
-        // create n: room/device/controls
+    /**
+     * method user in `run` method below:
+     * create three users and saves them in userDao:
+     * 1. usual user "jd" with "ROLE_USER", rooms created later
+     *   will NOT have it in room.administrators.
+     * 2. room administrator "ra" with "ROLE_USER",
+     *   rooms created later will have it in room.administrators
+     * 3. System administrator "sa" that can do everything
+     */
+    private void createThreeUsersAndSaveInUsersDao() {
+        // create "jd" user :
+        // will be non-admin and non-room-admin
+        // room.administrators will NOT contain "jd" user
+        User johnDoe = new User(
+                "John Doe",
+                "jd",
+                "jd",
+                new String[]{"ROLE_USER"});
+        // "ra" user will be non-admin but room-admin:
+        // for both test rooms
+        // room.administrators will contain "ra" user
+        User roomAdminWithRoleUser = new User(
+                "Room Admin",
+                "ra",
+                "ra",
+                new String[]{"ROLE_USER"});
+        // create admin user: can do everything
+        User admin = new User(
+                "System Administrator",
+                "sa",
+                "sa",
+                new String[]{"ROLE_USER", "ROLE_ADMIN"});
+        // and save them
+        userDao.save(admin);
+        userDao.save(johnDoe);
+        userDao.save(roomAdminWithRoleUser);
+    }
+
+    /**
+     * this method is used in `run` method below.
+     * It creates 2 rooms, with 1 device in each room,
+     * and 1 control in each device.
+     * user "ra" from userDao will be added to
+     * each room.administrators, because this is
+     * the only way to add user with "ROLE_USER"
+     * to room.administrators
+     */
+    private void createCoupleOfTestRoomsWithDevicesAndControls() {
+        // get room admin user
+        User roomAdminWithRoleUser = userDao.findByUsername("ra");
+
+        // create 2: room/device/controls
         for (int i = 1; i <= 2; i++) {
             // create new Control
             Control control = new Control("control " + i, i);
-            // set admin as last modified user
-            control.setLastModifiedBy(user);
+            // set roomAdminUser as last modified user for control
+            control.setLastModifiedBy(roomAdminWithRoleUser);
 
             // create new Device
             Device device = new Device("device " + i);
+
             // add control to it
             device.addControl(control);
+
             // set control.device to this new device
             control.setDevice(device);
 
             // create new room
-            Room room = new Room();
-            room.setName("room " + i);
-            room.setArea(i);
-            // add user to room administrators
-            room.addUserToRoomAdministrators(user);
+            Room room = new Room("room " + i, i);
+
+            // add "ra" user to room administrators
+            room.addUserToRoomAdministrators(roomAdminWithRoleUser);
 
             // add device to it
             room.addDevice(device);
@@ -76,13 +125,17 @@ public class DataLoader implements ApplicationRunner {
         }
     }
 
-    // load user by username as Admin, in order to successfully
-    // create new room: see RoomDao.save @PreAuthorize
-    // If we put here non-admin user we won't be able to
-    // create Room because Access will be denied, because room
-    // that is not created can't have `administrators` before:
+    /**
+     * This method is used in `run` method below.
+     * It loads user by username. In current implementation we
+     * load "sa" user in order to successfully
+     * create new room: see RoomDao.save @PreAuthorize
+     * If we put here non-admin user we won't be able to
+     * create Room because Access will be denied, because room
+     * that is not created can't have `administrators` before:
+    */
     private void authenticatedUserWithUserName(String username) {
-        // get "admin" UserDetails object:
+        // get UserDetails object:
         // casted from "our" com.teamtreehouse...User
         UserDetails userDetails =
                 customUserDetailsService.loadUserByUsername(
@@ -95,7 +148,7 @@ public class DataLoader implements ApplicationRunner {
                 new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );
-        // set authentication object
+        // set authentication object to security context
         SecurityContextHolder.getContext().setAuthentication(
                 authenticationToken
         );
@@ -103,30 +156,15 @@ public class DataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        // create two users: admin and johnDoe
-        User johnDoe = new User(
-                "John Doe",
-                "jd",
-                "123",
-                new String[]{"ROLE_USER"});
-        User admin = new User(
-                "System Administrator",
-                "sa",
-                "sa",
-                new String[]{"ROLE_USER", "ROLE_ADMIN"});
-        User otherAdmin = new User(
-                "Other Administrator",
-                "oa",
-                "oa",
-                new String[]{"ROLE_USER", "ROLE_ADMIN"});
-        // and save them
-        userDao.save(admin);
-        userDao.save(johnDoe);
-        userDao.save(otherAdmin);
+        // create three users and save them in usersDao
+        createThreeUsersAndSaveInUsersDao();
 
+        // authenticate admin user to successfully create rooms
         authenticatedUserWithUserName("sa");
 
-        createCoupleOfTestRoomsWithDevicesAndControls(admin);
-
+        // create 2 rooms, each room having one device,
+        // each device having one control
+        // "ra" user will be added to roomAdministrators
+        createCoupleOfTestRoomsWithDevicesAndControls();
     }
 }
