@@ -328,6 +328,7 @@ all necessary files. I tried and it worked like Charm.
     - `devicesCanBeSearchedByNameContaining`
     - `devicesCanBeSavedByAdminUsers`
     - `devicesCannotBeSavedByNonAdminNonRoomAdminUsers`
+    - `devicesCanBeSavedByRoomAdminUsers`
     <hr>
     [RoomDao] tests in [RoomDaoTest]:
     - `userWithAdminRoleCanCreateRoom`
@@ -338,6 +339,7 @@ all necessary files. I tried and it worked like Charm.
     [ControlDao] tests in [ControlDaoTest]:
     - `controlsCannotBeSavedByNonAdminsNonRoomAdmins`
     - `controlsCanBeSavedByAdmin`
+    - `controlsCanBeSavedByRoomAdmin`
     <hr>
     Integration tests (or functional I guess) are available
     in [ApplicationIntegrationTest] and are called:
@@ -354,11 +356,13 @@ all necessary files. I tried and it worked like Charm.
         - `postMethodCreatingNewDeviceShouldWorkWithAdminUser`
         - `creatingDeviceWithoutRoomReturnsValidationMessage`
         - `creatingDeviceWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
+        - `postMethodCreatingNewDeviceShouldWorkWithRoomAdminUser`
     - *Control* tests
         - `postMethodCreatingNewControlShouldWorkWithAdminUser`
         - `creatingControlWithoutDeviceReturnsValidationMessage`
         - `afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl`
         - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
+        - `postMethodCreatingNewControlShouldWorkWithRoomAdminUser`
 <hr>
 14. <a id="task-14"><a/>
     Add additional searches to find rooms by name and 
@@ -400,12 +404,14 @@ all necessary files. I tried and it worked like Charm.
     - `controlsCanBeSavedByRoomAdmin`
     <hr>
     Test checking this in [ApplicationIntegrationTest] are:
-    - `postMethodCreatingNewDeviceShouldWorkWithAdminUser`
-    - `creatingDeviceWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
-    - `postMethodCreatingNewDeviceShouldWorkWithRoomAdminUser`
-    - `postMethodCreatingNewControlShouldWorkWithRoomAdminUser`
-    - `postMethodCreatingNewControlShouldWorkWithAdminUser`
-    - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
+    - Device tests:
+        - `postMethodCreatingNewDeviceShouldWorkWithAdminUser`
+        - `creatingDeviceWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
+        - `postMethodCreatingNewDeviceShouldWorkWithRoomAdminUser`
+    - Room test:
+        - `postMethodCreatingNewControlShouldWorkWithRoomAdminUser`
+        - `postMethodCreatingNewControlShouldWorkWithAdminUser`
+        - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
 <hr>
 
 ### Notes about project <a id="notes"></a>
