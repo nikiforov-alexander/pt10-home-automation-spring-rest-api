@@ -34,6 +34,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -756,6 +757,60 @@ public class ApplicationIntegrationTest {
                 admin,
                 equalTo(
                         controlDao.findOne(indexOfNewlyAddedControl)
+                                .getLastModifiedBy()
+                )
+        );
+    }
+
+    @Test
+    public void afterEditingLoggedOnUserIsSetToLastModifiedByFieldInControl()
+            throws Exception {
+        // Arrange: mockMvc lets GET requests to be made
+        // There are two controls loaded by DatabaseLoader:
+        //  { name : "control 1", value : 1 }
+        //  { name : "control 2", value : 2 }
+
+        // create JSON from new Control object
+        String jsonFromControlWithDevice =
+                "{\"name\":\"new control name\"," +
+                        "\"value\":\"1\"," +
+                        "\"device\":" +
+                        "\"" +
+                        BASE_URL + "/devices/1" +
+                        "\"" +
+                        "}";
+
+        // create UsernamePasswordAuthenticationToken with
+        // admin user "sa":
+        UserDetails admin = customUserDetailsService.loadUserByUsername("sa");
+
+        // Check that current lastModifiedBy is not admin
+        // by username
+        assertThat(
+                controlDao.findOne(1L).getLastModifiedBy().getUsername(),
+                not(admin.getUsername())
+        );
+
+        // Act and Assert:
+        // When POST request is made to create new control
+        // Then status should be 204 no content
+        mockMvc.perform(
+                put(BASE_URL + "/controls/1")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        admin
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(jsonFromControlWithDevice)
+        ).andDo(print())
+                .andExpect(status().isNoContent());
+        // Then lastModifiedBy User of newly created Control should be
+        // admin user
+        assertThat(
+                admin,
+                equalTo(
+                        controlDao.findOne(1L)
                                 .getLastModifiedBy()
                 )
         );
