@@ -1,5 +1,6 @@
 package com.teamtreehouse.home;
 
+import com.google.common.collect.Iterables;
 import com.teamtreehouse.home.dao.ControlDao;
 import com.teamtreehouse.home.dao.DeviceDao;
 import com.teamtreehouse.home.dao.RoomDao;
@@ -440,6 +441,44 @@ public class ApplicationIntegrationTest {
     }
 
     @Test
+    public void postMethodCreatingNewDeviceShouldWorkWithRoomAdminUser()
+            throws Exception {
+        // Arrange
+        // create JSON from new Device object manually
+        String jsonFromDeviceWithRoom =
+                "{\"name\":\"device\"," +
+                        "\"room\":" +
+                        "\"" +
+                        BASE_URL + "/rooms/1" +
+                        "\"" +
+                        "}";
+
+        // create UsernamePasswordAuthenticationToken with
+        // room admin user "ra":
+        UserDetails roomAdminUser =
+                customUserDetailsService.loadUserByUsername("ra");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/devices is made with:
+        // 1. authenticated room admin user
+        // 2. JSON created from new device attached to first room
+        // Then:
+        // - status should be 201 Created
+        mockMvc.perform(
+                post(BASE_URL + "/devices")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        roomAdminUser
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(jsonFromDeviceWithRoom)
+        )
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     public void creatingDeviceWithoutRoomReturnsValidationMessage()
             throws Exception {
         // Arrange
@@ -577,6 +616,46 @@ public class ApplicationIntegrationTest {
     }
 
     @Test
+    public void postMethodCreatingNewControlShouldWorkWithRoomAdminUser()
+            throws Exception {
+        // Arrange
+        // create JSON from new Control object manually
+        String jsonFromDeviceWithRoom =
+                "{" +
+                        "\"name\":\"control\"," +
+                        "\"value\":\"1\"," +
+                        "\"device\":" +
+                        "\"" +
+                        BASE_URL + "/devices/1" +
+                        "\"" +
+                        "}";
+
+        // create UsernamePasswordAuthenticationToken with
+        // room admin user "ra":
+        UserDetails roomAdminUser =
+                customUserDetailsService.loadUserByUsername("ra");
+
+        // Act and Assert:
+        // When POST request to BASE_URL/controls is made with:
+        // 1. authenticated room admin user
+        // 2. JSON created from new control attached to first device
+        // Then:
+        // - status should be 201 Created
+        mockMvc.perform(
+                post(BASE_URL + "/controls")
+                        .with(
+                                SecurityMockMvcRequestPostProcessors.user(
+                                        roomAdminUser
+                                )
+                        )
+                        .contentType(contentType)
+                        .content(jsonFromDeviceWithRoom)
+        )
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     public void creatingControlWithoutDeviceReturnsValidationMessage()
             throws Exception {
         // Arrange
@@ -668,11 +747,17 @@ public class ApplicationIntegrationTest {
                         .content(jsonFromControlWithDevice)
         ).andDo(print())
                 .andExpect(status().isCreated());
+        // get index of newly added control
+        Long indexOfNewlyAddedControl =
+                (long) Iterables.size(controlDao.findAll());
         // Then lastModifiedBy User of newly created Control should be
         // admin user
         assertThat(
                 admin,
-                equalTo(controlDao.findOne(3L).getLastModifiedBy())
+                equalTo(
+                        controlDao.findOne(indexOfNewlyAddedControl)
+                                .getLastModifiedBy()
+                )
         );
     }
 
@@ -693,7 +778,7 @@ public class ApplicationIntegrationTest {
         // create UsernamePasswordAuthenticationToken with
         // admin user "jd": "ROLE_USER" and
         // he is not in room.administrators
-        UserDetails admin =
+        UserDetails user =
                 customUserDetailsService.loadUserByUsername("jd");
 
         // Act and Assert:
@@ -707,7 +792,7 @@ public class ApplicationIntegrationTest {
                 post(BASE_URL + "/controls")
                         .with(
                                 SecurityMockMvcRequestPostProcessors.user(
-                                        admin
+                                        user
                                 )
                         )
                         .contentType(contentType)

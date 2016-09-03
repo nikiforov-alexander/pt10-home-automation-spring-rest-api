@@ -30,7 +30,6 @@ public class ControlEventHandler {
                 .getName();
         // find user ny username
         User user = userDao.findByUsername(username);
-        System.out.println("HERE");
         // set last modified ny to this control
         control.setLastModifiedBy(user);
     }

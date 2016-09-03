@@ -47,7 +47,7 @@ public class ControlDaoTest {
     // login user depending on username
     // can be "sa" with ROLE_USER, ROLE_ADMIN
     // or "jd" with ROLE_USER
-    // or "oa" with ROLE_USER, ROLE_ADMIN but not room admin
+    // or "ra" with ROLE_USER, but is room admin for room 1 and room 2
     private void setUpUserByUsername(String username) {
         UserDetails user =
                 customUserDetailsService.loadUserByUsername(username);
@@ -84,6 +84,32 @@ public class ControlDaoTest {
         // Arrange:
         // login user "sa" : user with "ROLE_ADMIN"
         setUpUserByUsername("sa");
+
+        // take first room from roomDao
+        Device device = deviceDao.findOne(1L);
+        // create new control
+        Control newControl = new Control("control", 1);
+        // set control.device to first device
+        newControl.setDevice(device);
+
+        // Act and Assert:
+        // When we try to save new Control with Device
+        Control savedControl = controlDao.save(newControl);
+
+        // Then savedControl returned by dao should not be null
+        assertThat(
+                savedControl,
+                notNullValue(Control.class)
+        );
+    }
+
+    @Test
+    public void controlsCanBeSavedByRoomAdmin()
+            throws Exception {
+        // Arrange:
+        // login user "ra" : user with "ROLE_USER"
+        // but is in room.administrators for room 1 and 2
+        setUpUserByUsername("ra");
 
         // take first room from roomDao
         Device device = deviceDao.findOne(1L);

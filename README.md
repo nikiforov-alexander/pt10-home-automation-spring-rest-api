@@ -51,6 +51,7 @@
     field for fellow developers who will use your API 
     that explain that the value should represent either 
     square meters or square footage depending on your units of measure.
+    <hr>
 * [10.] (#task-10)
     Add a search resource that provides the ability 
     to find Devices based on a partial name.
@@ -89,6 +90,10 @@
     ./src/main/resources/rest-messages.properties "File w REST messages, describing our API ./src/main/resources/rest-messages.properties"
 
 <!--Misc-->
+[data]:
+    ./data "data directory with home.mv.db database ./data"
+[home.mv.db]:
+    ./data/home.mv.db "embedded H2 database used when bootRun task starts ./data/home.mv.db"
 <!--
     [model_classes_relationship_diagram.png]:
     ./misc/model_classes_relationship_diagram.png "./misc/model_classes_relationship_diagram.png"
@@ -227,7 +232,7 @@ all necessary files. I tried and it worked like Charm.
     room his request passes, see 
     `postMethodCreatingNewRoomShouldWorkWithAdminUser`
     in [ApplicationIntegrationTest]. 
-    <br>
+    <hr>
     Test trying to model situation where user with
     "ROLE_USER" is trying to create room, throws
     `NestedServletException` with nested 
@@ -236,6 +241,11 @@ all necessary files. I tried and it worked like Charm.
     that is trying to check that:
     `postMethodCreatingNewRoomShouldReturnAccessDeniedWithNormalUser`
     But it does not work properly. 
+    <hr>
+    Surprisingly, or may be not but the same kind of tests 
+    checking same in [RoomDaoTest] work properly without problem:
+    - `userWithAdminRoleCanCreateRoom`
+    - `userWithSimpleRoleCannotCreateRoom`
 <hr>
 8. <a id="task-8"><a/>
     Validate that room’s area is less than 1000 (sq ft/sq meters) 
@@ -259,7 +269,7 @@ all necessary files. I tried and it worked like Charm.
     that explain that the value should represent either 
     square meters or square footage depending on your units of measure.
     <hr>
-    I've added [rest-messages.properties] file w descriptions to 
+    I've added [rest-messages.properties] file with descriptions to 
     all fields of room, device and control.
 <hr>
 10. <a id="task-10"><a/>
@@ -268,12 +278,13 @@ all necessary files. I tried and it worked like Charm.
     <hr>
     In [DeviceDao] `findByNameContaining` Spring Query method is
     defined. The implementation will be provided by Spring Data.
-    <br>
+    <hr>
     `@RestResource(rel = "name", path = "contains-name")`
     annotation is added to make the following query 
     available in browser:
-    `BASE_URL/devices/search/contains-name?name=query`
-    Where BASE_URL can be `localhost:8080/api/v1`, and
+    - `BASE_URL/devices/search/contains-name?name=query`
+    <hr>
+    BASE_URL can be `http://localhost:8080/api/v1`, and
     "query" can be device name that we are looking for.
     <hr>
     This query is tested in `devicesCanBeSearchedByNameContaining()`
@@ -318,6 +329,7 @@ all necessary files. I tried and it worked like Charm.
     - `devicesCanBeSearchedByNameContaining`
     - `devicesCanBeSavedByAdminUsers`
     - `devicesCannotBeSavedByNonAdminNonRoomAdminUsers`
+    - `devicesCanBeSavedByRoomAdminUsers`
     <hr>
     [RoomDao] tests in [RoomDaoTest]:
     - `userWithAdminRoleCanCreateRoom`
@@ -328,6 +340,7 @@ all necessary files. I tried and it worked like Charm.
     [ControlDao] tests in [ControlDaoTest]:
     - `controlsCannotBeSavedByNonAdminsNonRoomAdmins`
     - `controlsCanBeSavedByAdmin`
+    - `controlsCanBeSavedByRoomAdmin`
     <hr>
     Integration tests (or functional I guess) are available
     in [ApplicationIntegrationTest] and are called:
@@ -344,11 +357,13 @@ all necessary files. I tried and it worked like Charm.
         - `postMethodCreatingNewDeviceShouldWorkWithAdminUser`
         - `creatingDeviceWithoutRoomReturnsValidationMessage`
         - `creatingDeviceWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
+        - `postMethodCreatingNewDeviceShouldWorkWithRoomAdminUser`
     - *Control* tests
         - `postMethodCreatingNewControlShouldWorkWithAdminUser`
         - `creatingControlWithoutDeviceReturnsValidationMessage`
         - `afterCreationLoggedOnUserIsSetToLastModifiedByFieldInControl`
         - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
+        - `postMethodCreatingNewControlShouldWorkWithRoomAdminUser`
 <hr>
 14. <a id="task-14"><a/>
     Add additional searches to find rooms by name and 
@@ -382,28 +397,37 @@ all necessary files. I tried and it worked like Charm.
     Tests checking this in [DeviceDaoTest] are:
     - `devicesCanBeSavedByAdminUsers`
     - `devicesCannotBeSavedByNonAdminNonRoomAdminUsers`
+    - `devicesCanBeSavedByRoomAdminUsers`
     <hr>
     Tests checking this in [ControlDaoTest] are:
     - `controlsCanBeSavedByAdmin`
     - `controlsCannotBeSavedByNonAdminsNonRoomAdmins`
+    - `controlsCanBeSavedByRoomAdmin`
     <hr>
     Test checking this in [ApplicationIntegrationTest] are:
-    - `postMethodCreatingNewDeviceShouldWorkWithAdminUser`
-    - `creatingDeviceWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
-    - `postMethodCreatingNewControlShouldWorkWithAdminUser`
-    - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
+    - Device tests:
+        - `postMethodCreatingNewDeviceShouldWorkWithAdminUser`
+        - `creatingDeviceWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
+        - `postMethodCreatingNewDeviceShouldWorkWithRoomAdminUser`
+    - Control tests:
+        - `postMethodCreatingNewControlShouldWorkWithRoomAdminUser`
+        - `postMethodCreatingNewControlShouldWorkWithAdminUser`
+        - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
 <hr>
 
 ### Notes about project <a id="notes"></a>
 - `bootRun` gradle task is used to run the App.
 - [DataLoader] class loads in system: 
-    - "jd" user with "ROLE_USER", and password "123"
-    - "sa" user with "ROLE_ADMIN", password: "sa"
+    - "jd" user with "ROLE_USER", and password "jd"
+    - "sa" "System Administrator" user with "ROLE_ADMIN", password: "sa"
+    - "ra" "Room Administrator" user with "ROLE_USER", password: "ra", 
+    but for both rooms loaded with DataLoader he will be in 
+    `room.administrators`
     - two rooms with two devices each created by
-      "sa" user, making "sa" user 
+      "sa" user, but manually made "ra" user 
       as one of the `room.administrators`
     - two devices with two controls each created by "sa"
-    - `control.lastModifiedBy` user is also "sa"
+    - `control.lastModifiedBy` user is set manually to "ra"
 - [DataLoader] class is used for easier check of 
   functionality, and it is also used in all tests,
   but the difference is that in each test I had
