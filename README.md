@@ -386,14 +386,18 @@ all necessary files. I tried and it worked like Charm.
     Tests checking this in [DeviceDaoTest] are:
     - `devicesCanBeSavedByAdminUsers`
     - `devicesCannotBeSavedByNonAdminNonRoomAdminUsers`
+    - `devicesCanBeSavedByRoomAdminUsers`
     <hr>
     Tests checking this in [ControlDaoTest] are:
     - `controlsCanBeSavedByAdmin`
     - `controlsCannotBeSavedByNonAdminsNonRoomAdmins`
+    - `controlsCanBeSavedByRoomAdmin`
     <hr>
     Test checking this in [ApplicationIntegrationTest] are:
     - `postMethodCreatingNewDeviceShouldWorkWithAdminUser`
     - `creatingDeviceWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
+    - `postMethodCreatingNewDeviceShouldWorkWithRoomAdminUser`
+    - `postMethodCreatingNewControlShouldWorkWithRoomAdminUser`
     - `postMethodCreatingNewControlShouldWorkWithAdminUser`
     - `creatingControlWithNonAdminAndNonRoomAdminUserShouldThrowAccessDeniedException`
 <hr>
