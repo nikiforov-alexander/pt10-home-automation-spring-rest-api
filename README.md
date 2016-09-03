@@ -51,6 +51,7 @@
     field for fellow developers who will use your API 
     that explain that the value should represent either 
     square meters or square footage depending on your units of measure.
+    <hr>
 * [10.] (#task-10)
     Add a search resource that provides the ability 
     to find Devices based on a partial name.
@@ -231,7 +232,7 @@ all necessary files. I tried and it worked like Charm.
     room his request passes, see 
     `postMethodCreatingNewRoomShouldWorkWithAdminUser`
     in [ApplicationIntegrationTest]. 
-    <br>
+    <hr>
     Test trying to model situation where user with
     "ROLE_USER" is trying to create room, throws
     `NestedServletException` with nested 
@@ -240,6 +241,11 @@ all necessary files. I tried and it worked like Charm.
     that is trying to check that:
     `postMethodCreatingNewRoomShouldReturnAccessDeniedWithNormalUser`
     But it does not work properly. 
+    <hr>
+    Surprisingly, or may be not but the same kind of tests 
+    checking same in [RoomDaoTest] work properly without problem:
+    - `userWithAdminRoleCanCreateRoom`
+    - `userWithSimpleRoleCannotCreateRoom`
 <hr>
 8. <a id="task-8"><a/>
     Validate that room’s area is less than 1000 (sq ft/sq meters) 
@@ -263,7 +269,7 @@ all necessary files. I tried and it worked like Charm.
     that explain that the value should represent either 
     square meters or square footage depending on your units of measure.
     <hr>
-    I've added [rest-messages.properties] file w descriptions to 
+    I've added [rest-messages.properties] file with descriptions to 
     all fields of room, device and control.
 <hr>
 10. <a id="task-10"><a/>
