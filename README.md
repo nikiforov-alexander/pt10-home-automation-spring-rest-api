@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/nikiforov-alexander/pt10-home-automation-spring-rest-api.svg?branch=master)](https://travis-ci.org/nikiforov-alexander/pt10-home-automation-spring-rest-api)
+
 # Techdegree project 10
 ### REST API with Spring: Home Automation
 <hr>
