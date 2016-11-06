@@ -5,18 +5,9 @@
       <configuration>
         <fileset id="fileset" name="Spring Application Context" removed="false">
           <file>file://$MODULE_DIR$/../../src/main/java/com/teamtreehouse/home/Application.java</file>
-          <file>file://$MODULE_DIR$/../../src/main/java/com/teamtreehouse/home/config/DataConfig.java</file>
+          <file>file://$MODULE_DIR$/../../src/main/java/com/teamtreehouse/home/config/RestConfig.java</file>
+          <file>file://$MODULE_DIR$/../../src/main/java/com/teamtreehouse/home/config/WebSecurityConfiguration.java</file>
         </fileset>
-      </configuration>
-    </facet>
-    <facet type="hibernate" name="Hibernate">
-      <configuration>
-        <datasource-map>
-          <unit-entry name="hibernate.cfg.xml" />
-          <unit-entry name="sessionFactory" />
-        </datasource-map>
-        <naming-strategy-map />
-        <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/../../src/main/resources/hibernate.cfg.xml" />
       </configuration>
     </facet>
   </component>
