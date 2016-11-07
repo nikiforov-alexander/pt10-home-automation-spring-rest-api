@@ -13,8 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -41,14 +40,8 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 // run with Spring junit runner class, so
 @RunWith(SpringJUnit4ClassRunner.class)
-// adding spring configuration from application class
-@SpringApplicationConfiguration(classes = {
-    Application.class
-})
-// About the rest annotations I'm not sure anymore:
-// I tried to put WebIntegrationTest, because
-// I believe that What I do
-@WebIntegrationTest
+// use random port
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 // now file in src/test/resources: test.properties
 // will separate our database from real app db
 @TestPropertySource("classpath:./test-ApplicationIntegrationTest.properties")
@@ -366,7 +359,7 @@ public class ApplicationIntegrationTest {
                 )
                 .andExpect(
                         jsonPath("$.errors[0].invalidValue",
-                                equalTo("1234")
+                                equalTo(1234)
                         )
                 )
                 .andExpect(
@@ -525,7 +518,7 @@ public class ApplicationIntegrationTest {
                 )
                 .andExpect(
                         jsonPath("$.errors[0].invalidValue",
-                                equalTo("null")
+                                equalTo(null)
                         )
                 )
                 .andExpect(
@@ -702,7 +695,7 @@ public class ApplicationIntegrationTest {
                 )
                 .andExpect(
                         jsonPath("$.errors[0].invalidValue",
-                                equalTo("null")
+                                equalTo(null)
                         )
                 )
                 .andExpect(
