@@ -16,9 +16,8 @@ public interface RoomDao
 
     // We allow only admins can create Room
     @Override
-    @SuppressWarnings("unchecked")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    Room save(@Param("room") Room room);
+    <S extends Room> S save(@Param("room") S room);
 
     // makes this GET request possible:
     // BASE_URL/rooms/search/has-area-less-than/?area=1

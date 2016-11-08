@@ -27,5 +27,5 @@ public interface DeviceDao
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN') or " +
             "#device.room.hasAdministrator(authentication.principal)")
-    Device save(@Param("device") Device device);
+    <S extends Device> S save(@Param("device") S device);
 }

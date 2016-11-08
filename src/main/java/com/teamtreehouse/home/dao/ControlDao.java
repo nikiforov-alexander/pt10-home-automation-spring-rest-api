@@ -13,8 +13,8 @@ public interface ControlDao
     // here i ensure that only if user is in
     // room.administrators OR he is administrator
     // he can save/modify control
-    @Override
     @PreAuthorize("hasRole('ROLE_ADMIN') or " +
-            "#control.device.room.hasAdministrator(authentication.principal)")
-    Control save(@Param("control") Control control);
+        "#control.device.room.hasAdministrator(authentication.principal)")
+    @Override
+    <S extends Control> S save(@Param("control") S control);
 }
