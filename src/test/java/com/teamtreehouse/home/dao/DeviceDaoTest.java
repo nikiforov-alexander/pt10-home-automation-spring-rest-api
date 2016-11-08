@@ -27,9 +27,6 @@ import static org.junit.Assert.assertThat;
 // user test.properties with in memory testing db
 @TestPropertySource("classpath:/test-DeviceDaoTest.properties")
 public class DeviceDaoTest {
-    // autowire user Dao
-    @Autowired
-    private UserDao userDao;
 
     // autowire room Dao
     @Autowired
