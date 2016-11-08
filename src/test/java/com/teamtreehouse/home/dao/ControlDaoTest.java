@@ -11,7 +11,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.hamcrest.Matchers.notNullValue;
@@ -20,14 +19,15 @@ import static org.junit.Assert.assertThat;
 // run integration test because that is the only way
 // to test Spring Data Reps
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-// user test.properties with in memory testing db
-@TestPropertySource("classpath:/test-ControlDaoTest.properties")
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties =
+                {
+                        "spring.datasource.url = " +
+                                "jdbc:h2:./data/ControlDaoTest;DB_CLOSE_ON_EXIT=FALSE"
+                }
+)
 public class ControlDaoTest {
-
-    // autowire user Dao
-    @Autowired
-    private UserDao userDao;
 
     // autowire control Dao
     @Autowired
