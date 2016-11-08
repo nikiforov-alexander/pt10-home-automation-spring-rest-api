@@ -1,13 +1,11 @@
 package com.teamtreehouse.home.dao;
 
-import com.teamtreehouse.home.Application;
 import com.teamtreehouse.home.model.Room;
 import com.teamtreehouse.home.service.CustomUserDetailsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
@@ -24,8 +22,7 @@ import static org.junit.Assert.assertThat;
 // run integration test because that is the only way
 // to test Spring Data Reps
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(Application.class)
-@WebIntegrationTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 // user test.properties with in memory testing db
 @TestPropertySource("classpath:/test-RoomDaoTest.properties")
 public class RoomDaoTest {
